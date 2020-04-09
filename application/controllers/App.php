@@ -29,6 +29,40 @@ class App extends CI_Controller {
 		$this->load->view('v_index', $data);
     }
 
+    public function power_usage()
+    {
+    	if ($_GET) {
+    		$data = array(
+				'konten' => 'detail_power_usage',
+	            'judul_page' => 'Power Usage',
+			);
+			$this->load->view('v_index', $data);
+    	}else{
+    		$data = array(
+				'konten' => 'power_usage',
+	            'judul_page' => 'Power Usage',
+			);
+			$this->load->view('v_index', $data);
+    	}
+    }
+
+    public function water_usage()
+    {
+    	if ($_GET) {
+    		$data = array(
+				'konten' => 'detail_water_usage',
+	            'judul_page' => 'Water Usage',
+			);
+			$this->load->view('v_index', $data);
+    	}else{
+    		$data = array(
+				'konten' => 'water_usage',
+	            'judul_page' => 'Water Usage',
+			);
+			$this->load->view('v_index', $data);
+    	}
+    }
+
    
 	
 
