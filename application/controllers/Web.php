@@ -1,6 +1,8 @@
 <?php
 defined('BASEPATH') OR exit('No direct script access allowed');
 
+use Xendit\Xendit;
+
 class Web extends CI_Controller {
 
 	
@@ -9,47 +11,40 @@ class Web extends CI_Controller {
 		$this->load->view('f_home');
 	}
 
-	public function form1()
+	public function create_invoice()
 	{
-		$this->load->view('f_form1');
-	}
+		require APPPATH.'vendor/autoload.php';
 
-	public function form2()
-	{
-		$this->load->view('f_form2');
-	}
-	public function form3()
-	{
-		$this->load->view('f_form3');
-	}
+		Xendit::setApiKey('xnd_development_rtmixBGRRVkoWJefkiE63EFhHUp19mdMj5i4ZGmP5YdDAicvvDhD5MPh0SnUW');
 
-	public function simpan_permohonan_informasi()
-	{
-		$this->db->insert('permohonan_informasi', $_POST);
-		$this->session->set_flashdata('message', alert_biasa('Permohonan Informasi Berhasil disimpan !','success'));
-		redirect('web','refresh');
-	}
+		$params = ['external_id' => 'demo_147580196270',
+		    'payer_email' => 'jualkoding@gmail.com',
+		    'description' => 'Pembayaran Kos',
+		    'amount' => 32000
+		];
 
-	public function simpan_keberatan_informasi()
-	{
-		$this->db->insert('keberatan_informasi', $_POST);
-		$this->session->set_flashdata('message', alert_biasa('Formulir Keberatan Informasi Berhasil Berhasil disimpan !','success'));
-		redirect('web','refresh');
-	}
+		$createInvoice = \Xendit\Invoice::create($params);
+		// log_data($createInvoice);
 
-	public function simpan_aduan_pelanggaran()
-	{
-		$ktp = upload_gambar_biasa('identitas_', 'image/file/', 'jpeg|jpg|pdf|png', 10000, 'userfile');
-		$bukti1 = upload_gambar_biasa('bukti1_', 'image/file/', 'jpeg|jpg|pdf|png', 10000, 'upload_bukti1');
-		$bukti2 = upload_gambar_biasa('bukti2_', 'image/file/', 'jpeg|jpg|pdf|png', 10000, 'upload_bukti2');
+		$id = $createInvoice['id'];
 
-		$_POST['upload_identitas'] = $ktp;
-		$_POST['upload_bukti1'] = $bukti1;
-		$_POST['upload_bukti2'] = $bukti2;
+		$getInvoice = \Xendit\Invoice::retrieve($id);
+		// log_data($getInvoice);
+		$url_back = $getInvoice['invoice_url'];
+		// log_data($url_back);
+		redirect($url_back);
 
-		$this->db->insert('aduan_pelanggaran', $_POST);
-		$this->session->set_flashdata('message', alert_biasa('Formulir Aduan Pelanggaran Berhasil Berhasil disimpan !','success'));
-		redirect('web','refresh');
+		// redirect($getInvoice['invoice_url'],'refresh');
+		//header('Location: '.$getInvoice['invoice_url']);
+
+		// $expireInvoice = \Xendit\Invoice::expireInvoice($id);
+		// var_dump($expireInvoice);
+
+		// $getAllInvoice = \Xendit\Invoice::retrieveAll();
+		// var_dump(($getAllInvoice));
+
+
+		
 	}
 
 }
