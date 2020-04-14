@@ -98,7 +98,7 @@ class Smartans_user extends CI_Controller
         } else {
             $data = array(
 		'EMAIL' => $this->input->post('EMAIL',TRUE),
-		'PASSWORD' => $this->input->post('PASSWORD',TRUE),
+		'PASSWORD' => md5($this->input->post('PASSWORD',TRUE)),
 		'FIRST_NAME' => $this->input->post('FIRST_NAME',TRUE),
 		'LAST_NAME' => $this->input->post('LAST_NAME',TRUE),
 		'MOBILE_NO' => $this->input->post('MOBILE_NO',TRUE),
@@ -126,7 +126,7 @@ class Smartans_user extends CI_Controller
                 'action' => site_url('smartans_user/update_action'),
 		'ID_USER' => set_value('ID_USER', $row->ID_USER),
 		'EMAIL' => set_value('EMAIL', $row->EMAIL),
-		'PASSWORD' => set_value('PASSWORD', $row->PASSWORD),
+		'PASSWORD' => md5(set_value('PASSWORD', $row->PASSWORD)),
 		'FIRST_NAME' => set_value('FIRST_NAME', $row->FIRST_NAME),
 		'LAST_NAME' => set_value('LAST_NAME', $row->LAST_NAME),
 		'MOBILE_NO' => set_value('MOBILE_NO', $row->MOBILE_NO),

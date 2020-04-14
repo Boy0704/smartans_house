@@ -29,27 +29,28 @@
         
         <li><a href="app"><i class="fa fa-dashboard"></i> <span>Dashboard</span></a></li>
         
+        <?php 
+        if ($this->session->userdata('level')=='admin') {
+         ?>
+
         <li><a href="smartans_location"><i class="fa fa-location-arrow"></i> <span>Location</span></a></li>
         <li><a href="smartans_room"><i class="fa fa-bank"></i> <span>Room</span></a></li>
         <li><a href="smartans_tarif"><i class="fa fa-credit-card"></i> <span>Master Tarif</span></a></li>
-        <li><a href="app/billing_process"><i class="fa fa-money"></i> <span>Billing Proccess</span></a></li>
+        <li><a href="app/billing_list"><i class="fa fa-money"></i> <span>Billing Proccess</span></a></li>
         <li><a href="app/power_usage"><i class="fa fa-battery-3"></i> <span>Power Usage</span></a></li>
         <li><a href="app/water_usage"><i class="fa fa-hourglass-start"></i> <span>Water Usage</span></a></li>
-        <!-- <li class="treeview">
-          <a href="#">
-              <i class="fa fa-list"></i>
-              <span>Master Pelayanan</span>
-              <i class="fa fa-angle-left pull-right"></i>
-          </a>
-          <ul class="treeview-menu">
-              <li><a href="permohonan_informasi"><i class="fa fa-angle-double-right"></i> Permohonan Informasi</a></li>
-              <li><a href="keberatan_informasi"><i class="fa fa-angle-double-right"></i> Pengajuan Keberatan Informasi</a></li>
-              <li><a href="aduan_pelanggaran"><i class="fa fa-angle-double-right"></i> Aduan Pelanggaran</a></li>
-          </ul>
-        </li> -->
-        
         
         <li><a href="smartans_user"><i class="fa fa-users"></i> <span>Manajemen User</span></a></li>
+
+      <?php } else { ?>
+
+        <li><a href="app/billing_list"><i class="fa fa-money"></i> <span>Invoice List</span></a></li>
+        <li><a href="app/power_usage"><i class="fa fa-battery-3"></i> <span>Power Usage</span></a></li>
+        <li><a href="app/water_usage"><i class="fa fa-hourglass-start"></i> <span>Water Usage</span></a></li>
+        
+        <li><a href="smartans_user"><i class="fa fa-users"></i> <span>Manajemen User</span></a></li>
+
+      <?php } ?>
 
         <li class="header">LABELS</li>
         <li><a href="#"><i class="fa fa-circle-o text-red"></i> <span>Faqs</span></a></li>

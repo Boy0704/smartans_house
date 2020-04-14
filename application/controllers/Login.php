@@ -15,7 +15,7 @@ class Login extends CI_Controller {
 			$password = md5($this->input->post('password'));
 
 			// $hashed = '$2y$10$LO9IzV0KAbocIBLQdgy.oeNDFSpRidTCjXSQPK45ZLI9890g242SG';
-			$cek_user = $this->db->query("SELECT * FROM smartans_user WHERE email='$username' and password='$password' ");
+			$cek_user = $this->db->query("SELECT * FROM smartans_user WHERE email='$username' and password='$password' and ACTIVE_FLAG='y' ");
 			// if (password_verify($password, $hashed)) {
 			if ($cek_user->num_rows() > 0) {
 				foreach ($cek_user->result() as $row) {
@@ -25,6 +25,8 @@ class Login extends CI_Controller {
 					$sess_data['username'] = $row->EMAIL;
 					$sess_data['foto'] = 'default.png';
 					$sess_data['level'] = $row->LEVEL;
+					$sess_data['location_id'] = $row->LOCATION_ID;
+					$sess_data['room_id'] = $row->ROOM_ID;
 					$this->session->set_userdata($sess_data);
 				}
 
@@ -38,7 +40,7 @@ class Login extends CI_Controller {
 				if ($this->session->userdata('level') == 'admin') {
 					redirect('app','refresh');
 				} elseif ($this->session->userdata('level') == 'user') {
-					redirect('web','refresh');
+					redirect('app','refresh');
 				}
 
 				// redirect('app/index');
@@ -47,6 +49,24 @@ class Login extends CI_Controller {
 				// $this->session->set_flashdata('message', alert_tunggu('Gagal Login!\n username atau password kamu salah','warning'));
 				redirect('login','refresh');
 			}
+	}
+
+	public function daftar()
+	{
+		$data = array(
+			'FIRST_NAME' => $this->input->post('first_name'),
+			'LAST_NAME' => $this->input->post('last_name'),
+			'MOBILE_NO' => $this->input->post('mobile_no'),
+			'EMAIL' => $this->input->post('email'),
+			'PASSWORD' => md5($this->input->post('password')),
+			'LOCATION_ID' => $this->input->post('location_id'),
+			'ROOM_ID' => $this->input->post('room_id'),
+			'ACTIVE_FLAG' => 't',
+			'LEVEL' => 'user',
+		);
+		$this->db->insert('smartans_user', $data);
+		$this->session->set_flashdata('message', alert_biasa('Pendaftaran berhasil, silahkan menunggu aktivasi by admin','success'));
+		redirect('login','refresh');
 	}
 
 	

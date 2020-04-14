@@ -24,11 +24,11 @@
         <![endif]-->
 
         <!-- Favicon and touch icons -->
-        <link rel="shortcut icon" href="assets/login/ico/favicon.png">
+        <!-- <link rel="shortcut icon" href="assets/login/ico/favicon.png">
         <link rel="apple-touch-icon-precomposed" sizes="144x144" href="assets/login/ico/apple-touch-icon-144-precomposed.png">
         <link rel="apple-touch-icon-precomposed" sizes="114x114" href="assets/login/ico/apple-touch-icon-114-precomposed.png">
         <link rel="apple-touch-icon-precomposed" sizes="72x72" href="assets/login/ico/apple-touch-icon-72-precomposed.png">
-        <link rel="apple-touch-icon-precomposed" href="assets/login/ico/apple-touch-icon-57-precomposed.png">
+        <link rel="apple-touch-icon-precomposed" href="assets/login/ico/apple-touch-icon-57-precomposed.png"> -->
 
     </head>
 
@@ -38,7 +38,7 @@
         <div class="top-content">
             
             <div class="inner-bg">
-                <div class="container">
+                <div class="container" id="login">
                     <div class="row">
                         <div class="col-sm-8 col-sm-offset-2 text">
                             <h1><strong>APLIKASI</strong> SMARTANS HOUSE</h1>
@@ -69,12 +69,88 @@
                                         <input type="password" name="password" placeholder="Password..." class="form-password form-control" id="form-password">
                                     </div>
                                     <button id="btnLogin" class="btn">LOGIN!</button>
+                                    <p>
+                                        <b>Belum punya akun, </p><a class="btn btn-primary" id="btndaftar">DAFTAR DISINI</a></b>
+                                    
                                 </form>
                             </div>
                         </div>
                     </div>
                     
                 </div>
+
+
+                <div class="container" id="daftar" style="display: none;">
+                    <div class="row">
+                        <div class="col-sm-8 col-sm-offset-2 text">
+                            <h1><strong>APLIKASI</strong> SMARTANS HOUSE</h1>
+                            <div class="description">
+                                
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-sm-6 col-sm-offset-3 form-box">
+                            <div class="form-top">
+                                <div class="form-top-left">
+                                    <h3>FORM PENDAFTARAN</h3>
+                                    <p>Silahkan isi form berikut untuk mendaftar :</p>
+                                </div>
+                                <div class="form-top-right">
+                                    <i class="fa fa-key"></i>
+                                </div>
+                            </div>
+                            <div class="form-bottom">
+                                <form action="login/daftar" method="POST">
+                                    <div class="form-group">
+                                        <label class="sr-only" for="form-nama">Nama Depan</label>
+                                        <input type="text" name="first_name" placeholder="Nama Depan..." class="form-nama form-control" id="form-nama">
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="sr-only" for="form-lastname">Nama Belakang</label>
+                                        <input type="text" name="last_name" placeholder="Nama Belakang..." class="form-lastname form-control" id="form-lastname">
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="sr-only" for="form-notelp">No Telp</label>
+                                        <input type="text" name="mobile_no" placeholder="No Telp..." class="form-notelp form-control" id="form-notelp">
+                                    </div>
+                                    
+                                    <div class="form-group">
+                                        <label class="sr-only" for="form-email">Email</label>
+                                        <input type="text" name="email" placeholder="Email..." class="form-email form-control" id="form-email">
+                                    </div>
+                                    
+                                    <div class="form-group">
+                                        <label class="sr-only" for="form-password">Password</label>
+                                        <input type="password" name="password" placeholder="Password..." class="form-password form-control" id="form-password">
+                                    </div>
+                                    <div class="form-group" >
+                                        <select class="form-control" name="location_id" required>
+                                            <option value="">--Pilih Lokasi--</option>
+                                            <?php foreach ($this->db->get('smartans_location')->result() as $key => $value): ?>
+                                                <option value="<?php echo $value->LOCATION_ID ?>"><?php echo $value->LOCATION_ID ?></option>
+                                            <?php endforeach ?>
+                                        </select>
+                                    </div>
+
+                                    <div class="form-group" >
+                                        <select class="form-control" name="room_id" required>
+                                            <option value="">--Pilih Room--</option>
+                                            <?php foreach ($this->db->get('smartans_room')->result() as $key => $value): ?>
+                                                <option value="<?php echo $value->ROOM_ID ?>"><?php echo $value->ROOM_ID ?></option>
+                                            <?php endforeach ?>
+                                        </select>
+                                    </div>
+
+
+                                    <button id="btnLogin" class="btn">SIMPAN!</button>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                    
+                </div>
+
             </div>
             
         </div>
@@ -87,6 +163,12 @@
         <script src="assets/login/js/scripts.js"></script>
         <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
         <script type="text/javascript">
+            $(document).ready(function() {
+                $('#btndaftar').click(function(event) {
+                    $('#daftar').show();
+                    $('#login').hide();
+                });
+            });
             // $(document).ready(function() {
             //     $('#btnLogin').click(function() {
             //         var username = $('#form-username').val();
