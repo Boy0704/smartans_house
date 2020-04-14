@@ -57,6 +57,13 @@
 			<td><?php echo $retVal = ($smartans_user->ACTIVE_FLAG == 'y') ? '<span class="label label-success">Aktif</span>' : '<span class="label label-danger">Tidak Aktif</span>' ; ?></td>
 			<td><?php echo $smartans_user->LEVEL ?></td>
 			<td style="text-align:center" width="100px">
+                <?php 
+                if ($smartans_user->ACTIVE_FLAG == 't') {
+                    ?>
+                    <a href="app/aktifkan_akun/<?php echo $smartans_user->ID_USER ?>" class="label label-success">Aktifkan</a>
+                    <?php
+                }
+                 ?>
 				<?php 
 				echo anchor(site_url('smartans_user/update/'.$smartans_user->ID_USER),'<span class="label label-info">Ubah</span>'); 
 				echo ' | '; 

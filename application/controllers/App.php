@@ -47,6 +47,13 @@ class App extends CI_Controller {
     	}
     }
 
+    public function aktifkan_akun($id_user)
+    {
+    	$this->db->where('ID_USER', $id_user);
+    	$this->db->update('smartans_user', array('ACTIVE_FLAG'=>'y'));
+    	redirect('smartans_user','refresh');
+    }
+
     public function water_usage()
     {
     	if ($_GET) {
