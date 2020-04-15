@@ -70,7 +70,10 @@ class Smartans_location extends CI_Controller
             'action' => site_url('smartans_location/create_action'),
 	    'ID' => set_value('ID'),
 	    'LOCATION_ID' => set_value('LOCATION_ID'),
-	    'LOCATION_NAME' => set_value('LOCATION_NAME'),
+        'LOCATION_NAME' => set_value('LOCATION_NAME'),
+        'LOCATION_ADDRESS' => set_value('LOCATION_ADDRESS'),
+        'ACTIVE_FLAG' => set_value('ACTIVE_FLAG'),
+	    'PAYGATE_FLAG' => set_value('PAYGATE_FLAG'),
 	);
         $this->load->view('v_index', $data);
     }
@@ -84,7 +87,10 @@ class Smartans_location extends CI_Controller
         } else {
             $data = array(
 		'LOCATION_ID' => $this->input->post('LOCATION_ID',TRUE),
-		'LOCATION_NAME' => $this->input->post('LOCATION_NAME',TRUE),
+        'LOCATION_NAME' => $this->input->post('LOCATION_NAME',TRUE),
+        'LOCATION_ADDRESS' => $this->input->post('LOCATION_ADDRESS',TRUE),
+        'ACTIVE_FLAG' => $this->input->post('ACTIVE_FLAG',TRUE),
+		'PAYGATE_FLAG' => $this->input->post('PAYGATE_FLAG',TRUE),
 	    );
 
             $this->Smartans_location_model->insert($data);
@@ -105,7 +111,10 @@ class Smartans_location extends CI_Controller
                 'action' => site_url('smartans_location/update_action'),
 		'ID' => set_value('ID', $row->ID),
 		'LOCATION_ID' => set_value('LOCATION_ID', $row->LOCATION_ID),
-		'LOCATION_NAME' => set_value('LOCATION_NAME', $row->LOCATION_NAME),
+        'LOCATION_NAME' => set_value('LOCATION_NAME', $row->LOCATION_NAME),
+        'LOCATION_ADDRESS' => set_value('LOCATION_ADDRESS', $row->LOCATION_ADDRESS),
+        'ACTIVE_FLAG' => set_value('ACTIVE_FLAG', $row->ACTIVE_FLAG),
+		'PAYGATE_FLAG' => set_value('PAYGATE_FLAG', $row->PAYGATE_FLAG),
 	    );
             $this->load->view('v_index', $data);
         } else {
@@ -123,7 +132,10 @@ class Smartans_location extends CI_Controller
         } else {
             $data = array(
 		'LOCATION_ID' => $this->input->post('LOCATION_ID',TRUE),
-		'LOCATION_NAME' => $this->input->post('LOCATION_NAME',TRUE),
+        'LOCATION_NAME' => $this->input->post('LOCATION_NAME',TRUE),
+        'LOCATION_ADDRESS' => $this->input->post('LOCATION_ADDRESS',TRUE),
+        'ACTIVE_FLAG' => $this->input->post('ACTIVE_FLAG',TRUE),
+		'PAYGATE_FLAG' => $this->input->post('PAYGATE_FLAG',TRUE),
 	    );
 
             $this->Smartans_location_model->update($this->input->post('ID', TRUE), $data);

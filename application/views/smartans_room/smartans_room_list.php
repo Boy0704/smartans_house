@@ -35,7 +35,8 @@
                 <th>No</th>
 		<th>LOCATION ID</th>
 		<th>ROOM ID</th>
-		<th>ROOM NAME</th>
+        <th>ROOM NAME</th>
+		<th>ACTIVE</th>
 		<th>Action</th>
             </tr><?php
             foreach ($smartans_room_data as $smartans_room)
@@ -45,7 +46,8 @@
 			<td width="80px"><?php echo ++$start ?></td>
 			<td><?php echo $smartans_room->LOCATION_ID ?></td>
 			<td><?php echo $smartans_room->ROOM_ID ?></td>
-			<td><?php echo $smartans_room->ROOM_NAME ?></td>
+            <td><?php echo $smartans_room->ROOM_NAME ?></td>
+			<td><?php echo $retVal = ($smartans_room->ACTIVE_FLAG == '1') ? '<span class="label label-success">Aktif</span>' : '<span class="label label-danger">Tidak Aktif</span>' ; ?></td>
 			<td style="text-align:center" width="200px">
 				<?php 
 				echo anchor(site_url('smartans_room/update/'.$smartans_room->ID),'<span class="label label-info">Ubah</span>'); 

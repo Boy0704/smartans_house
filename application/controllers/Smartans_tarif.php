@@ -76,7 +76,9 @@ class Smartans_tarif extends CI_Controller
 	    'ROOM_NO' => set_value('ROOM_NO'),
 	    'TARIF_ROOM' => set_value('TARIF_ROOM'),
 	    'TARIF_LISTRIK' => set_value('TARIF_LISTRIK'),
-	    'TARIF_AIR' => set_value('TARIF_AIR'),
+        'TARIF_AIR' => set_value('TARIF_AIR'),
+        'START_DATE' => set_value('START_DATE'),
+	    'END_DATE' => set_value('END_DATE'),
 	);
         $this->load->view('v_index', $data);
     }
@@ -93,7 +95,9 @@ class Smartans_tarif extends CI_Controller
 		'ROOM_NO' => $this->input->post('ROOM_NO',TRUE),
 		'TARIF_ROOM' => $this->input->post('TARIF_ROOM',TRUE),
 		'TARIF_LISTRIK' => $this->input->post('TARIF_LISTRIK',TRUE),
-		'TARIF_AIR' => $this->input->post('TARIF_AIR',TRUE),
+        'TARIF_AIR' => $this->input->post('TARIF_AIR',TRUE),
+        'START_DATE' => $this->input->post('START_DATE',TRUE),
+		'END_DATE' => $this->input->post('END_DATE',TRUE),
 	    );
 
             $this->Smartans_tarif_model->insert($data);
@@ -117,7 +121,9 @@ class Smartans_tarif extends CI_Controller
 		'ROOM_NO' => set_value('ROOM_NO', $row->ROOM_NO),
 		'TARIF_ROOM' => set_value('TARIF_ROOM', $row->TARIF_ROOM),
 		'TARIF_LISTRIK' => set_value('TARIF_LISTRIK', $row->TARIF_LISTRIK),
-		'TARIF_AIR' => set_value('TARIF_AIR', $row->TARIF_AIR),
+        'TARIF_AIR' => set_value('TARIF_AIR', $row->TARIF_AIR),
+        'START_DATE' => set_value('START_DATE', $row->START_DATE),
+		'END_DATE' => set_value('END_DATE', $row->END_DATE),
 	    );
             $this->load->view('v_index', $data);
         } else {
@@ -138,7 +144,9 @@ class Smartans_tarif extends CI_Controller
 		'ROOM_NO' => $this->input->post('ROOM_NO',TRUE),
 		'TARIF_ROOM' => $this->input->post('TARIF_ROOM',TRUE),
 		'TARIF_LISTRIK' => $this->input->post('TARIF_LISTRIK',TRUE),
-		'TARIF_AIR' => $this->input->post('TARIF_AIR',TRUE),
+        'TARIF_AIR' => $this->input->post('TARIF_AIR',TRUE),
+        'START_DATE' => $this->input->post('START_DATE',TRUE),
+		'END_DATE' => $this->input->post('END_DATE',TRUE),
 	    );
 
             $this->Smartans_tarif_model->update($this->input->post('ID_TARIF', TRUE), $data);

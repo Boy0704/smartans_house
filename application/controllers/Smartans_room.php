@@ -72,7 +72,8 @@ class Smartans_room extends CI_Controller
 	    'ID' => set_value('ID'),
 	    'LOCATION_ID' => set_value('LOCATION_ID'),
 	    'ROOM_ID' => set_value('ROOM_ID'),
-	    'ROOM_NAME' => set_value('ROOM_NAME'),
+        'ROOM_NAME' => set_value('ROOM_NAME'),
+	    'ACTIVE_FLAG' => set_value('ACTIVE_FLAG'),
 	);
         $this->load->view('v_index', $data);
     }
@@ -87,7 +88,8 @@ class Smartans_room extends CI_Controller
             $data = array(
 		'LOCATION_ID' => $this->input->post('LOCATION_ID',TRUE),
 		'ROOM_ID' => $this->input->post('ROOM_ID',TRUE),
-		'ROOM_NAME' => $this->input->post('ROOM_NAME',TRUE),
+        'ROOM_NAME' => $this->input->post('ROOM_NAME',TRUE),
+		'ACTIVE_FLAG' => $this->input->post('ACTIVE_FLAG',TRUE),
 	    );
 
             $this->Smartans_room_model->insert($data);
@@ -109,7 +111,8 @@ class Smartans_room extends CI_Controller
 		'ID' => set_value('ID', $row->ID),
 		'LOCATION_ID' => set_value('LOCATION_ID', $row->LOCATION_ID),
 		'ROOM_ID' => set_value('ROOM_ID', $row->ROOM_ID),
-		'ROOM_NAME' => set_value('ROOM_NAME', $row->ROOM_NAME),
+        'ROOM_NAME' => set_value('ROOM_NAME', $row->ROOM_NAME),
+		'ACTIVE_FLAG' => set_value('ACTIVE_FLAG', $row->ACTIVE_FLAG),
 	    );
             $this->load->view('v_index', $data);
         } else {
@@ -128,7 +131,8 @@ class Smartans_room extends CI_Controller
             $data = array(
 		'LOCATION_ID' => $this->input->post('LOCATION_ID',TRUE),
 		'ROOM_ID' => $this->input->post('ROOM_ID',TRUE),
-		'ROOM_NAME' => $this->input->post('ROOM_NAME',TRUE),
+        'ROOM_NAME' => $this->input->post('ROOM_NAME',TRUE),
+		'ACTIVE_FLAG' => $this->input->post('ACTIVE_FLAG',TRUE),
 	    );
 
             $this->Smartans_room_model->update($this->input->post('ID', TRUE), $data);

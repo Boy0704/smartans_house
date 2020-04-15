@@ -127,7 +127,9 @@
                                     <div class="form-group" >
                                         <select class="form-control" name="location_id" required>
                                             <option value="">--Pilih Lokasi--</option>
-                                            <?php foreach ($this->db->get('smartans_location')->result() as $key => $value): ?>
+                                            <?php 
+                                            $this->db->where('ACTIVE_FLAG', '1');
+                                            foreach ($this->db->get('smartans_location')->result() as $key => $value): ?>
                                                 <option value="<?php echo $value->LOCATION_ID ?>"><?php echo $value->LOCATION_ID ?></option>
                                             <?php endforeach ?>
                                         </select>
@@ -136,7 +138,8 @@
                                     <div class="form-group" >
                                         <select class="form-control" name="room_id" required>
                                             <option value="">--Pilih Room--</option>
-                                            <?php foreach ($this->db->get('smartans_room')->result() as $key => $value): ?>
+                                            <?php 
+                                            foreach ($this->db->get('v_cek_room')->result() as $key => $value): ?>
                                                 <option value="<?php echo $value->ROOM_ID ?>"><?php echo $value->ROOM_ID ?></option>
                                             <?php endforeach ?>
                                         </select>

@@ -35,6 +35,8 @@
                 <th>No</th>
 		<th>LOCATION ID</th>
 		<th>LOCATION NAME</th>
+        <th>ACTIVE</th>
+        <th>PAYGATE</th>
 		<th>Action</th>
             </tr><?php
             foreach ($smartans_location_data as $smartans_location)
@@ -44,6 +46,8 @@
 			<td width="80px"><?php echo ++$start ?></td>
 			<td><?php echo $smartans_location->LOCATION_ID ?></td>
 			<td><?php echo $smartans_location->LOCATION_NAME ?></td>
+            <td><?php echo $retVal = ($smartans_location->ACTIVE_FLAG == '1') ? '<span class="label label-success">Aktif</span>' : '<span class="label label-danger">Tidak Aktif</span>' ; ?></td>
+            <td><?php echo $retVal = ($smartans_location->PAYGATE_FLAG == '1') ? '<span class="label label-success">Aktif</span>' : '<span class="label label-danger">Tidak Aktif</span>' ; ?></td>
 			<td style="text-align:center" width="200px">
 				<?php 
 				echo anchor(site_url('smartans_location/update/'.$smartans_location->ID),'<span class="label label-info">Ubah</span>'); 

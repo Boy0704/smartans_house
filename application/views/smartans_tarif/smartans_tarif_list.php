@@ -37,7 +37,9 @@
 		<th>ROOM NO</th>
 		<th>TARIF ROOM</th>
 		<th>TARIF LISTRIK</th>
-		<th>TARIF AIR</th>
+        <th>TARIF AIR</th>
+        <th>START DATE</th>
+		<th>END DATE</th>
 		<th>Action</th>
             </tr><?php
             foreach ($smartans_tarif_data as $smartans_tarif)
@@ -50,6 +52,8 @@
 			<td><?php echo number_format($smartans_tarif->TARIF_ROOM) ?></td>
 			<td><?php echo number_format($smartans_tarif->TARIF_LISTRIK) ?></td>
 			<td><?php echo number_format($smartans_tarif->TARIF_AIR) ?></td>
+            <td><?php echo $smartans_tarif->START_DATE ?></td>
+            <td><?php echo $smartans_tarif->END_DATE ?></td>
 			<td style="text-align:center" width="200px">
 				<?php 
 				echo anchor(site_url('smartans_tarif/update/'.$smartans_tarif->ID_TARIF),'<span class="label label-info">Ubah</span>'); 

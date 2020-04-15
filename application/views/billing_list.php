@@ -39,13 +39,23 @@
 							?>
 							<span class="label label-warning">UNPAID</span>
 							<?php
-						}
+						} else {
+
 						 ?>
+						 	<span class="label label-danger">EXPRIED</span>
+						<?php } ?>
 
 					</td>
 					
 					<td>
 						<a href="app/detail_inv/<?php echo $value->no_invoice ?>" class="label label-info">Detail</a>
+
+						<?php 
+						if (($value->status == 'UNPAID' || $value->status == 'EXPRIED') and $this->session->userdata('level') == 'admin'  ) {
+							?>
+							<a href="app/add_pembayaran/<?php echo $value->no_invoice.'/'.$value->total_tagihan ?>" class="label label-success">ADD PAYMENT</a>
+							<?php
+						} ?>
 					</td>
 				</tr>
 			<?php } ?>

@@ -26,7 +26,9 @@
             <select class="form-control select2" name="LOCATION_ID">
                 <option value="<?php echo $LOCATION_ID ?>"><?php echo $LOCATION_ID ?></option>
                 <option value="0">ALL LOCATION</option>
-                <?php foreach ($this->db->get('smartans_location')->result() as $key => $value): ?>
+                <?php 
+                $this->db->where('ACTIVE_FLAG', '1');
+                foreach ($this->db->get('smartans_location')->result() as $key => $value): ?>
                     <option value="<?php echo $value->LOCATION_ID ?>"><?php echo $value->LOCATION_ID ?></option>
                 <?php endforeach ?>
             </select>
@@ -37,7 +39,9 @@
             <select class="form-control select2" name="ROOM_ID">
                 <option value="<?php echo $ROOM_ID ?>"><?php echo $ROOM_ID ?></option>
                 <option value="0">ALL ROOM</option>
-                <?php foreach ($this->db->get('smartans_room')->result() as $key => $value): ?>
+                <?php 
+                $this->db->where('ACTIVE_FLAG', '1');
+                foreach ($this->db->get('smartans_room')->result() as $key => $value): ?>
                     <option value="<?php echo $value->ROOM_ID ?>"><?php echo $value->ROOM_ID ?></option>
                 <?php endforeach ?>
             </select>
