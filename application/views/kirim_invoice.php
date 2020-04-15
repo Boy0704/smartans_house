@@ -11,6 +11,11 @@
 		  				 ?>
 		  				<select class="form-control select2" name="LOCATION_ID">
 			                <?php 
+			                if ($this->session->userdata('location_id') == '0') {
+			                	# code...
+			                } else {
+			                	$this->db->where('LOCATION_ID', $this->session->userdata('location_id'));
+			                }
 			                $this->db->where('ACTIVE_FLAG', '1');
 			                foreach ($this->db->get('smartans_location')->result() as $key => $value): ?>
 			                    <option value="<?php echo $value->LOCATION_ID ?>"><?php echo $value->LOCATION_ID ?></option>
