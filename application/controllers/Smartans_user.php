@@ -105,7 +105,7 @@ class Smartans_user extends CI_Controller
 		'LAST_NAME' => $this->input->post('LAST_NAME',TRUE),
 		'MOBILE_NO' => $this->input->post('MOBILE_NO',TRUE),
 		'LOCATION_ID' => $LOCATION_ID,
-		'ROOM_ID' => $this->input->post('ROOM_ID',TRUE),
+		'ROOM_ID' => '',
 		'ACTIVE_FLAG' => $this->input->post('ACTIVE_FLAG',TRUE),
 		'LEVEL' => $this->input->post('LEVEL',TRUE),
 	    );
@@ -133,7 +133,7 @@ class Smartans_user extends CI_Controller
 		'LAST_NAME' => set_value('LAST_NAME', $row->LAST_NAME),
 		'MOBILE_NO' => set_value('MOBILE_NO', $row->MOBILE_NO),
 		'LOCATION_ID' => set_value('LOCATION_ID', $row->LOCATION_ID),
-		'ROOM_ID' => set_value('ROOM_ID', $row->ROOM_ID),
+		// 'ROOM_ID' => set_value('ROOM_ID', $row->ROOM_ID),
 		'ACTIVE_FLAG' => set_value('ACTIVE_FLAG', $row->ACTIVE_FLAG),
 		'LEVEL' => set_value('LEVEL', $row->LEVEL),
 	    );
@@ -160,7 +160,7 @@ class Smartans_user extends CI_Controller
                 'LAST_NAME' => $this->input->post('LAST_NAME',TRUE),
                 'MOBILE_NO' => $this->input->post('MOBILE_NO',TRUE),
                 'LOCATION_ID' => $LOCATION_ID,
-                'ROOM_ID' => $this->input->post('ROOM_ID',TRUE),
+                // 'ROOM_ID' => $this->input->post('ROOM_ID',TRUE),
                 'ACTIVE_FLAG' => $this->input->post('ACTIVE_FLAG',TRUE),
                 'LEVEL' => $this->input->post('LEVEL',TRUE),
                 );
@@ -172,7 +172,7 @@ class Smartans_user extends CI_Controller
                 'LAST_NAME' => $this->input->post('LAST_NAME',TRUE),
                 'MOBILE_NO' => $this->input->post('MOBILE_NO',TRUE),
                 'LOCATION_ID' => $LOCATION_ID,
-                'ROOM_ID' => $this->input->post('ROOM_ID',TRUE),
+                // 'ROOM_ID' => $this->input->post('ROOM_ID',TRUE),
                 'ACTIVE_FLAG' => $this->input->post('ACTIVE_FLAG',TRUE),
                 'LEVEL' => $this->input->post('LEVEL',TRUE),
                 );
