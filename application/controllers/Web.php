@@ -59,6 +59,15 @@ class Web extends CI_Controller {
 				// log_data($getInvoice);
 				$url_back = $getInvoice['invoice_url'];
 			}
+
+			$cek_ = $this->db->get_where('smartans_tagihan_header', array('id_user'=>$value->ID_USER,'bulan'=>$BULAN,'tahun'=>$TAHUN));
+			if ($cek_->num_rows() > 0) {
+				$this->db->where('id_user', $value->ID_USER);
+				$this->db->where('bulan', $BULAN);
+				$this->db->where('tahun', $TAHUN);
+				$this->db->delete('smartans_tagihan_header');
+			}
+
 			//simpan ke data tagihan header
 			$this->db->insert('smartans_tagihan_header', array(
 				'id_user'=> $value->ID_USER,

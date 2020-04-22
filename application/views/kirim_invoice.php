@@ -46,8 +46,8 @@
 		  					<div class="col-md-3">
 		  						<label>Tahun</label>
 		  						<select name="tahun" class="form-control">
-		  							<option value=""><?php echo date('Y'); ?></option>
-		  							<option value=""><?php echo date('Y', strtotime('-1 year', strtotime(date('Y')))); ?></option>
+		  							<option value="<?php echo date('Y'); ?>"><?php echo date('Y'); ?></option>
+		  							<option value="<?php echo date('Y', strtotime('-1 year', strtotime(date('Y')))); ?>"><?php echo date('Y', strtotime('-1 year', strtotime(date('Y')))); ?></option>
 		  						</select>
 		  					</div>
 		  				</div>
