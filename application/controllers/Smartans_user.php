@@ -96,13 +96,15 @@ class Smartans_user extends CI_Controller
         if ($this->form_validation->run() == FALSE) {
             $this->create();
         } else {
+            $n = $this->input->post('LOCATION_ID');
+            $LOCATION_ID = implode(',', $n);
             $data = array(
 		'EMAIL' => $this->input->post('EMAIL',TRUE),
 		'PASSWORD' => md5($this->input->post('PASSWORD',TRUE)),
 		'FIRST_NAME' => $this->input->post('FIRST_NAME',TRUE),
 		'LAST_NAME' => $this->input->post('LAST_NAME',TRUE),
 		'MOBILE_NO' => $this->input->post('MOBILE_NO',TRUE),
-		'LOCATION_ID' => $this->input->post('LOCATION_ID',TRUE),
+		'LOCATION_ID' => $LOCATION_ID,
 		'ROOM_ID' => $this->input->post('ROOM_ID',TRUE),
 		'ACTIVE_FLAG' => $this->input->post('ACTIVE_FLAG',TRUE),
 		'LEVEL' => $this->input->post('LEVEL',TRUE),
@@ -149,17 +151,33 @@ class Smartans_user extends CI_Controller
         if ($this->form_validation->run() == FALSE) {
             $this->update($this->input->post('ID_USER', TRUE));
         } else {
-            $data = array(
-		'EMAIL' => $this->input->post('EMAIL',TRUE),
-		'PASSWORD' => $this->input->post('PASSWORD',TRUE),
-		'FIRST_NAME' => $this->input->post('FIRST_NAME',TRUE),
-		'LAST_NAME' => $this->input->post('LAST_NAME',TRUE),
-		'MOBILE_NO' => $this->input->post('MOBILE_NO',TRUE),
-		'LOCATION_ID' => $this->input->post('LOCATION_ID',TRUE),
-		'ROOM_ID' => $this->input->post('ROOM_ID',TRUE),
-		'ACTIVE_FLAG' => $this->input->post('ACTIVE_FLAG',TRUE),
-		'LEVEL' => $this->input->post('LEVEL',TRUE),
-	    );
+            $n = $this->input->post('LOCATION_ID');
+            $LOCATION_ID = implode(',', $n);
+            if ($this->input->post('PASSWORD') == '') {
+                $data = array(
+                'EMAIL' => $this->input->post('EMAIL',TRUE),
+                'FIRST_NAME' => $this->input->post('FIRST_NAME',TRUE),
+                'LAST_NAME' => $this->input->post('LAST_NAME',TRUE),
+                'MOBILE_NO' => $this->input->post('MOBILE_NO',TRUE),
+                'LOCATION_ID' => $LOCATION_ID,
+                'ROOM_ID' => $this->input->post('ROOM_ID',TRUE),
+                'ACTIVE_FLAG' => $this->input->post('ACTIVE_FLAG',TRUE),
+                'LEVEL' => $this->input->post('LEVEL',TRUE),
+                );
+            } else {
+                $data = array(
+                'EMAIL' => $this->input->post('EMAIL',TRUE),
+                'PASSWORD' => md5($this->input->post('PASSWORD',TRUE)),
+                'FIRST_NAME' => $this->input->post('FIRST_NAME',TRUE),
+                'LAST_NAME' => $this->input->post('LAST_NAME',TRUE),
+                'MOBILE_NO' => $this->input->post('MOBILE_NO',TRUE),
+                'LOCATION_ID' => $LOCATION_ID,
+                'ROOM_ID' => $this->input->post('ROOM_ID',TRUE),
+                'ACTIVE_FLAG' => $this->input->post('ACTIVE_FLAG',TRUE),
+                'LEVEL' => $this->input->post('LEVEL',TRUE),
+                );
+            }
+            
 
             $this->Smartans_user_model->update($this->input->post('ID_USER', TRUE), $data);
             $this->session->set_flashdata('message', 'Update Record Success');
@@ -184,12 +202,12 @@ class Smartans_user extends CI_Controller
     public function _rules() 
     {
 	$this->form_validation->set_rules('EMAIL', 'email', 'trim|required');
-	$this->form_validation->set_rules('PASSWORD', 'password', 'trim|required');
+	// $this->form_validation->set_rules('PASSWORD', 'password', 'trim|required');
 	$this->form_validation->set_rules('FIRST_NAME', 'first name', 'trim|required');
 	$this->form_validation->set_rules('LAST_NAME', 'last name', 'trim|required');
 	$this->form_validation->set_rules('MOBILE_NO', 'mobile no', 'trim|required');
-	$this->form_validation->set_rules('LOCATION_ID', 'location id', 'trim|required');
-	$this->form_validation->set_rules('ROOM_ID', 'room id', 'trim|required');
+	// $this->form_validation->set_rules('LOCATION_ID', 'location id', 'trim|required');
+	// $this->form_validation->set_rules('ROOM_ID', 'room id', 'trim|required');
 	$this->form_validation->set_rules('ACTIVE_FLAG', 'active flag', 'trim|required');
 	$this->form_validation->set_rules('LEVEL', 'level', 'trim|required');
 

@@ -29,6 +29,15 @@ class App extends CI_Controller {
 		$this->load->view('v_index', $data);
     }
 
+    public function detail_inv($id)
+    {
+        $data = array(
+            'konten' => 'template_mail',
+            'judul_page' => 'Detail',
+        );
+        $this->load->view('v_index', $data);
+    }
+
     public function power_usage()
     {
     	if ($_GET) {
@@ -78,7 +87,7 @@ class App extends CI_Controller {
     {
     	$data = array(
 			'konten' => 'kirim_invoice',
-            'judul_page' => 'Kirim Invoice',
+            'judul_page' => 'Create Invoice',
 		);
 		$this->load->view('v_index', $data);
     }

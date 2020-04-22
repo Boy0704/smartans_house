@@ -34,7 +34,7 @@ $total_use = 0;
 		  			</thead>
 		  			<tbody>
 		  				<?php 
-		  				$sql = $this->db->query("SELECT * FROM smartans_water_meter where LOCATION_ID='$LOCATION' AND ROOM_ID='$ROOM' AND DATE_TIME BETWEEN '$tgl1' and '$tgl2' ");
+		  				$sql = $this->db->query("SELECT * FROM SMARTANS_WATER_METER_V where location_id='$LOCATION' AND room_id='$ROOM' AND MDATE BETWEEN '$tgl1' and '$tgl2' ");
 		  				foreach ($sql->result() as $key => $value): ?>
 		  				<tr>
 		  					<td><?php echo $value->DATE_TIME ?></td>

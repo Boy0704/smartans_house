@@ -37,7 +37,9 @@ class Login extends CI_Controller {
 				// exit;
 				// $sess_data['username'] = $username;
 				// $this->session->set_userdata($sess_data);
-				if ($this->session->userdata('level') == 'admin') {
+				if ($this->session->userdata('level') == 'superadmin') {
+					redirect('app','refresh');
+				} elseif ($this->session->userdata('level') == 'admin') {
 					redirect('app','refresh');
 				} elseif ($this->session->userdata('level') == 'user') {
 					redirect('app','refresh');

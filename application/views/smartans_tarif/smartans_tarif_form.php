@@ -6,6 +6,11 @@
             <select class="form-control select2" name="LOCATION_ID">
                 <option value="<?php echo $LOCATION_ID ?>"><?php echo $LOCATION_ID ?></option>
                 <?php 
+                
+                if ($this->session->userdata('level') == 'admin') {
+                    $this->db->where_in('LOCATION_ID', $this->session->userdata('location_id'));
+                }
+                
                 $this->db->where('ACTIVE_FLAG', '1');
                 foreach ($this->db->get('smartans_location')->result() as $key => $value): ?>
                     <option value="<?php echo $value->LOCATION_ID ?>"><?php echo $value->LOCATION_ID ?></option>
@@ -18,6 +23,9 @@
             <select class="form-control select2" name="ROOM_NO">
                 <option value="<?php echo $ROOM_NO ?>"><?php echo $ROOM_NO ?></option>
                 <?php 
+                if ($this->session->userdata('level') == 'admin') {
+                    $this->db->where_in('LOCATION_ID', $this->session->userdata('location_id'));
+                }
                 $this->db->where('ACTIVE_FLAG', '1');
                 foreach ($this->db->get('smartans_room')->result() as $key => $value): ?>
                     <option value="<?php echo $value->ROOM_ID ?>"><?php echo $value->ROOM_ID ?></option>

@@ -53,7 +53,7 @@
 			<td><?php echo $smartans_user->LAST_NAME ?></td>
 			<td><?php echo $smartans_user->MOBILE_NO ?></td>
 			<td><?php echo $retVal = ($smartans_user->LOCATION_ID == '0') ? 'ALL LOCATION' : $smartans_user->LOCATION_ID ; ?></td>
-			<td><?php echo $retVal = ($smartans_user->ROOM_ID == '0') ? 'ALL ROOM' : $smartans_user->ROOM_ID ; ?></td>
+			<td><?php echo $retVal = ($smartans_user->ROOM_ID == '') ? 'ALL ROOM' : $smartans_user->ROOM_ID ; ?></td>
 			<td><?php echo $retVal = ($smartans_user->ACTIVE_FLAG == 'y') ? '<span class="label label-success">Aktif</span>' : '<span class="label label-danger">Tidak Aktif</span>' ; ?></td>
 			<td><?php echo $smartans_user->LEVEL ?></td>
 			<td style="text-align:center" width="100px">

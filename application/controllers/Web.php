@@ -20,14 +20,20 @@ class Web extends CI_Controller {
 
 		//ambil data user
 		$LOCATION_ID = $this->input->post('LOCATION_ID');
-		foreach ($this->db->get_where('smartans_user', array('LEVEL'=>'user','LOCATION_ID'=>$LOCATION_ID))->result() as $key => $value) {
+		$ROOM_ID = $this->input->post('ROOM_ID');
+		$EMAIL = $this->input->post('email');
+		$BULAN = $this->input->post('bulan');
+		
+		$this->db->where('LEVEL', 'user');
+		$this->db->where('LOCATION_ID', $LOCATION_ID);
+		if ($ROOM_ID != '0') {
+			$this->db->where('ROOM_ID', $ROOM_ID);
+		}
+		foreach ($this->db->get('smartans_user')->result() as $key => $value) {
 
-			$tgl1 = date('Y-m-d', strtotime('-1 month', strtotime(date('Y-m-d'))));
-			$tgl2 = date('Y-m-d');
-
-			$no_invoice = 'INV'.create_random(8);
-			$total_power_usage = total_power_usage($value->LOCATION_ID,$value->ROOM_ID);
-			$total_water_usage = total_water_usage($value->LOCATION_ID,$value->ROOM_ID);
+			$no_invoice = create_random(8);
+			$total_power_usage = total_power_usage($value->LOCATION_ID,$value->ROOM_ID,$BULAN);
+			$total_water_usage = total_water_usage($value->LOCATION_ID,$value->ROOM_ID,$BULAN);
 			$tarif_room = $this->db->get_where('smartans_tarif', array('LOCATION_ID'=>$value->LOCATION_ID,'ROOM_NO'=>$value->ROOM_ID))->row()->TARIF_ROOM;
 			$tarif_listrik = $this->db->get_where('smartans_tarif', array('LOCATION_ID'=>$value->LOCATION_ID,'ROOM_NO'=>$value->ROOM_ID))->row()->TARIF_LISTRIK;
 			$tarif_air = $this->db->get_where('smartans_tarif', array('LOCATION_ID'=>$value->LOCATION_ID,'ROOM_NO'=>$value->ROOM_ID))->row()->TARIF_AIR;
@@ -39,24 +45,28 @@ class Web extends CI_Controller {
 			    'description' => 'Pembayaran Kos',
 			    'amount' => $total_tagihan
 			];
+			$url_back = '';
+			$paygate_status = $this->db->get_where('smartans_location', array('LOCATION_ID'=>$LOCATION_ID))->row()->PAYGATE_FLAG;
+	        if ($paygate_status == '0') {
+	          # code...
+	        }else{
 
-			$createInvoice = \Xendit\Invoice::create($params);
-			$id = $createInvoice['id'];
+				$createInvoice = \Xendit\Invoice::create($params);
+				$id = $createInvoice['id'];
 
-			$getInvoice = \Xendit\Invoice::retrieve($id);
-			// log_data($getInvoice);
-			$url_back = $getInvoice['invoice_url'];
-
+				$getInvoice = \Xendit\Invoice::retrieve($id);
+				// log_data($getInvoice);
+				$url_back = $getInvoice['invoice_url'];
+			}
 			//simpan ke data tagihan header
 			$this->db->insert('smartans_tagihan_header', array(
 				'id_user'=> $value->ID_USER,
 				'no_invoice'=> $no_invoice,
-				'tgl1'=>$tgl1,
-				'tgl2'=>$tgl2,
 				'date_create'=> get_waktu(),
 				'total_tagihan'=> $total_tagihan,
 				'invoice_url'=> $url_back,
 				'invoice_id_xendit'=> $id,
+				'bulan' => $BULAN
 			));
 
 			$id_tagihan = $this->db->insert_id();
@@ -80,7 +90,14 @@ class Web extends CI_Controller {
 				'jumlah'=>$total_water_usage*$tarif_air
 			));
 
+			if ($EMAIL == '1') {
+				$this->kirim_email($no_invoice);
+			}
 			
+
+		}
+
+		
 
 		}
 
@@ -98,8 +115,63 @@ class Web extends CI_Controller {
 
 	    }
 
+	    public function email_theme()
+	    {
+	    	$this->load->view('template_mail');
+	    }
+
+
+	    private function kirim_email($no_invoice)
+	    {
+	    	$email_saya = "noreplay@hexindo-tbk.co.id";
+			$pass_saya  = "";
+			//konfigurasi email
+			$config = array();
+			$config['charset'] = 'iso-8859-1';
+			// $config['useragent'] = '10.87.200.12';
+			$config['protocol']= "smtp";
+			$config['mailtype']= "html";
+			$config['smtp_host']= "10.87.200.12";
+			$config['smtp_port']= "25";
+			$config['smtp_timeout']= "25";
+			$config['smtp_user']= "$email_saya";
+			$config['smtp_pass']= "$pass_saya";
+			// $config['crlf']="\r\n";
+			// $config['newline']="\r\n";
+			// $config['wordwrap'] = TRUE;
+
+	        // Load library email dan konfigurasinya
+	        $this->load->library('email', $config);
+
+	        // Email dan nama pengirim
+	        $this->email->from('noreplay@hexindo-tbk.co.id', 'AR Reminder - Invoice No. '.$invoice.'');
+
+	        // Email penerima
+	        $this->email->to($email); // Ganti dengan email tujuan
+
+	        // Lampiran email, isi dengan url/path file
+	        // $this->email->attach(base_url().'upload/'.$value->file1);
+	        // $this->email->attach(base_url().'upload/'.$value->file2);
+	        // $this->email->attach(base_url().'upload/'.$value->file3);
+
+	        // Subject email
+	        $this->email->subject('AR Reminder - Invoice No. '.$invoice.'');
+
+	        // Isi email
+	        $messageEmail = $this->load->view('template_mail');
+	        $this->email->message($messageEmail);
+
+	        // Tampilkan pesan sukses atau error
+	        if ($this->email->send()) {
+	            echo 'Sukses! email berhasil dikirim.<br>';
+
+	        } else {
+	            echo 'Error! email tidak dapat dikirim.<br>';
+	            echo $this->email->print_debugger();
+	        }
+	    }
 		
 		
-	}
+	
 
 }

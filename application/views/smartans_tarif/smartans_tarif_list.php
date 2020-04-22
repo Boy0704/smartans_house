@@ -11,7 +11,7 @@
             <div class="col-md-1 text-right">
             </div>
             <div class="col-md-3 text-right">
-                <form action="<?php echo site_url('smartans_tarif/index'); ?>" class="form-inline" method="get">
+                <!-- <form action="<?php echo site_url('smartans_tarif/index'); ?>" class="form-inline" method="get">
                     <div class="input-group">
                         <input type="text" class="form-control" name="q" value="<?php echo $q; ?>">
                         <span class="input-group-btn">
@@ -26,11 +26,12 @@
                           <button class="btn btn-primary" type="submit">Search</button>
                         </span>
                     </div>
-                </form>
+                </form> -->
             </div>
         </div>
         <div class="table-responsive">
-        <table class="table table-bordered" style="margin-bottom: 10px">
+        <table class="table table-bordered" style="margin-bottom: 10px" id="example1">
+            <thead>
             <tr>
                 <th>No</th>
 		<th>LOCATION ID</th>
@@ -41,8 +42,17 @@
         <th>START DATE</th>
 		<th>END DATE</th>
 		<th>Action</th>
-            </tr><?php
-            foreach ($smartans_tarif_data as $smartans_tarif)
+            </tr>
+            </thead>
+            <tbody>
+            <?php
+
+            $start = 0;
+            if ($this->session->userdata('level') == 'admin') {
+                $this->db->where_in('LOCATION_ID', $this->session->userdata('location_id'));
+            }
+            $smartans_tarif_data = $this->db->get('smartans_tarif');
+            foreach ($smartans_tarif_data->result() as $smartans_tarif)
             {
                 ?>
                 <tr>
@@ -65,14 +75,15 @@
                 <?php
             }
             ?>
+            </tbody>
         </table>
         </div>
-        <div class="row">
+        <!-- <div class="row">
             <div class="col-md-6">
                 <a href="#" class="btn btn-primary">Total Record : <?php echo $total_rows ?></a>
 	    </div>
             <div class="col-md-6 text-right">
                 <?php echo $pagination ?>
             </div>
-        </div>
+        </div> -->
     

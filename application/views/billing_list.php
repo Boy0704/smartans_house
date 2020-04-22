@@ -18,6 +18,16 @@
 				<?php 
 				if ($this->session->userdata('level') == 'user') {
 					$this->db->where('id_user', $this->session->userdata('id_user'));
+				} elseif ($this->session->userdata('level') == 'admin') {
+					$d_user = array();
+					$this->db->select('id_user');
+					$this->db->where_in('LOCATION_ID', $this->session->userdata('location_id'));
+					$data_user = $this->db->get('smartans_user');
+					foreach ($data_user->result() as $rw) {
+						array_push($d_user,$rw->id_user);
+					}
+					$user = implode(',',$d_user);
+					$this->db->where_in('id_user', $user);
 				}
 				$data = $this->db->get('smartans_tagihan_header');
 				foreach ($data->result() as $key => $value) {

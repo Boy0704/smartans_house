@@ -14,20 +14,49 @@
             <!-- <input type="text" class="form-control" name="LOCATION_ADDRESS" id="LOCATION_ADDRESS" placeholder="LOCATION ADDRESS" value="<?php echo $LOCATION_ADDRESS; ?>" /> -->
         </div>
         <div class="form-group">
-            <label for="varchar">ACTIVE FLAG</label>
-            <select name="ACTIVE_FLAG" class="form-control" required="">
+            <label for="varchar">ACTIVE FLAG</label><br>
+            <!-- <select name="ACTIVE_FLAG" class="form-control" required="">
                 <option value="<?php echo $ACTIVE_FLAG ?>"><?php echo $ACTIVE_FLAG ?></option>
                 <option value="1">AKTIF</option>
                 <option value="0">NON AKTIF</option>
-            </select>
+            </select> -->
+            <?php 
+            if ($ACTIVE_FLAG == '') {
+                ?>
+                <input type="radio" name="ACTIVE_FLAG" value="1" checked=""> AKTIF
+                <input type="radio" name="ACTIVE_FLAG" value="0" > NON AKTIF
+                <?php
+            } elseif($ACTIVE_FLAG =='1') {
+             ?>
+                <input type="radio" name="ACTIVE_FLAG" value="1" checked=""> AKTIF
+                <input type="radio" name="ACTIVE_FLAG" value="0" > NON AKTIF
+            <?php }else{ ?>
+                <input type="radio" name="ACTIVE_FLAG" value="1" > AKTIF
+                <input type="radio" name="ACTIVE_FLAG" value="0" checked=""> NON AKTIF
+            <?php } ?>
+            
         </div>
         <div class="form-group">
-            <label for="varchar">PAYGATE FLAG</label>
-            <select name="PAYGATE_FLAG" class="form-control" required="">
+            <label for="varchar">PAYGATE FLAG</label><br>
+            <!-- <select name="PAYGATE_FLAG" class="form-control" required="">
                 <option value="<?php echo $PAYGATE_FLAG ?>"><?php echo $PAYGATE_FLAG ?></option>
                 <option value="1">AKTIF</option>
                 <option value="0">NON AKTIF</option>
-            </select>
+            </select> -->
+            <?php 
+            if ($PAYGATE_FLAG == '') {
+                ?>
+                <input type="radio" name="PAYGATE_FLAG" value="1" checked=""> AKTIF
+                <input type="radio" name="PAYGATE_FLAG" value="0" > NON AKTIF
+                <?php
+            } elseif($PAYGATE_FLAG =='1') {
+             ?>
+                <input type="radio" name="PAYGATE_FLAG" value="1" checked=""> AKTIF
+                <input type="radio" name="PAYGATE_FLAG" value="0" > NON AKTIF
+            <?php }else{ ?>
+                <input type="radio" name="PAYGATE_FLAG" value="1" > AKTIF
+                <input type="radio" name="PAYGATE_FLAG" value="0" checked=""> NON AKTIF
+            <?php } ?>
         </div>
 	    <input type="hidden" name="ID" value="<?php echo $ID; ?>" /> 
 	    <button type="submit" class="btn btn-primary"><?php echo $button ?></button> 

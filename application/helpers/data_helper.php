@@ -1,10 +1,15 @@
 <?php 
 
+function date_indo($tgl)
+{
+	return date('d F Y', strtotime($tgl));
+}
+
 function total_power_usage($location_id,$room_id)
 {
 	$CI =& get_instance();
-	$tgl1 = date('Y-m-d', strtotime('-1 month', strtotime(date('Y-m-d'))));
-	$tgl2 = date('Y-m-d');
+	$tgl1 = $CI->db->get_where('smartans_tarif', array('LOCATION_ID'=>$location_id,'ROOM_NO'=>$room_id))->row()->START_DATE; //date('Y-m-d', strtotime('-1 month', strtotime(date('Y-m-d'))));
+	$tgl2 = $CI->db->get_where('smartans_tarif', array('LOCATION_ID'=>$location_id,'ROOM_NO'=>$room_id))->row()->END_DATE;//date('Y-m-d');
 	$total = $CI->db->query("SELECT sum(POWER_USAGE) as total FROM smartans_daily_power_usage where LOCATION_ID='$location_id' AND ROOM_ID='$room_id' AND USAGE_DATE BETWEEN '$tgl1' and '$tgl2' ")->row()->total;
 	return $total;
 }
@@ -12,8 +17,8 @@ function total_power_usage($location_id,$room_id)
 function total_water_usage($location_id,$room_id)
 {
 	$CI =& get_instance();
-	$tgl1 = date('Y-m-d', strtotime('-1 month', strtotime(date('Y-m-d'))));
-	$tgl2 = date('Y-m-d');
+	$tgl1 = $CI->db->get_where('smartans_tarif', array('LOCATION_ID'=>$location_id,'ROOM_NO'=>$room_id))->row()->START_DATE; //date('Y-m-d', strtotime('-1 month', strtotime(date('Y-m-d'))));
+	$tgl2 = $CI->db->get_where('smartans_tarif', array('LOCATION_ID'=>$location_id,'ROOM_NO'=>$room_id))->row()->END_DATE;//date('Y-m-d');
 	$total = $CI->db->query("SELECT sum(VOLUME) AS total FROM smartans_water_meter where LOCATION_ID='$location_id' AND ROOM_ID='$room_id' AND DATE_TIME BETWEEN '$tgl1' and '$tgl2'")->row()->total;
 	return $total;
 }

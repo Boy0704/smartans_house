@@ -6,7 +6,8 @@
         </div>
 	    <div class="form-group">
             <label for="varchar">PASSWORD <?php echo form_error('PASSWORD') ?></label>
-            <input type="text" class="form-control" name="PASSWORD" id="PASSWORD" placeholder="PASSWORD" value="<?php echo $PASSWORD; ?>" />
+            <input type="text" class="form-control" name="PASSWORD" id="PASSWORD" placeholder="PASSWORD" value="" />
+            <p style="color: red">*) Kosongkan jika tidak diubah</p>
         </div>
 	    <div class="form-group">
             <label for="varchar">FIRST NAME <?php echo form_error('FIRST_NAME') ?></label>
@@ -23,8 +24,12 @@
 	    <div class="form-group">
             <label for="varchar">LOCATION ID <?php echo form_error('LOCATION_ID') ?></label>
             <!-- <input type="text" class="form-control" name="LOCATION_ID" id="LOCATION_ID" placeholder="LOCATION ID" value="<?php echo $LOCATION_ID; ?>" /> -->
-            <select class="form-control select2" name="LOCATION_ID">
-                <option value="<?php echo $LOCATION_ID ?>"><?php echo $LOCATION_ID ?></option>
+            <select name="LOCATION_ID[]" class="form-control select2" multiple="multiple" data-placeholder="Select a Location"
+                        style="width: 100%;">
+            <!-- <select class="form-control select2" name="LOCATION_ID"> -->
+                <?php if ($LOCATION_ID != ''): ?>
+                    <option value="<?php echo $LOCATION_ID ?>" selected><?php echo $LOCATION_ID ?></option>
+                <?php endif ?>
                 <option value="0">ALL LOCATION</option>
                 <?php 
                 $this->db->where('ACTIVE_FLAG', '1');
@@ -33,9 +38,9 @@
                 <?php endforeach ?>
             </select>
         </div>
-	    <div class="form-group">
+	    <!-- <div class="form-group">
             <label for="varchar">ROOM ID <?php echo form_error('ROOM_ID') ?></label>
-            <!-- <input type="text" class="form-control" name="ROOM_ID" id="ROOM_ID" placeholder="ROOM ID" value="<?php echo $ROOM_ID; ?>" /> -->
+            <input type="text" class="form-control" name="ROOM_ID" id="ROOM_ID" placeholder="ROOM ID" value="<?php echo $ROOM_ID; ?>" />
             <select class="form-control select2" name="ROOM_ID">
                 <option value="<?php echo $ROOM_ID ?>"><?php echo $ROOM_ID ?></option>
                 <option value="0">ALL ROOM</option>
@@ -45,15 +50,29 @@
                     <option value="<?php echo $value->ROOM_ID ?>"><?php echo $value->ROOM_ID ?></option>
                 <?php endforeach ?>
             </select>
-        </div>
+        </div> -->
 	    <div class="form-group">
-            <label for="varchar">ACTIVE FLAG <?php echo form_error('ACTIVE_FLAG') ?></label>
+            <label for="varchar">ACTIVE FLAG <?php echo form_error('ACTIVE_FLAG') ?></label><br>
             <!-- <input type="text" class="form-control" name="ACTIVE_FLAG" id="ACTIVE_FLAG" placeholder="ACTIVE FLAG" value="<?php echo $ACTIVE_FLAG; ?>" /> -->
-            <select class="form-control" name="ACTIVE_FLAG">
+            <!-- <select class="form-control" name="ACTIVE_FLAG">
                 <option value="<?php echo $ACTIVE_FLAG ?>"><?php echo $ACTIVE_FLAG ?></option>
                 <option value="y">AKTIF</option>
                 <option value="t">TIDAK AKTIF</option>
-            </select>
+            </select> -->
+            <?php 
+            if ($ACTIVE_FLAG == '') {
+                ?>
+                <input type="radio" name="ACTIVE_FLAG" value="y" checked=""> AKTIF
+                <input type="radio" name="ACTIVE_FLAG" value="t" > NON AKTIF
+                <?php
+            } elseif($ACTIVE_FLAG =='y') {
+             ?>
+                <input type="radio" name="ACTIVE_FLAG" value="y" checked=""> AKTIF
+                <input type="radio" name="ACTIVE_FLAG" value="t" > NON AKTIF
+            <?php }else{ ?>
+                <input type="radio" name="ACTIVE_FLAG" value="y" > AKTIF
+                <input type="radio" name="ACTIVE_FLAG" value="t" checked=""> NON AKTIF
+            <?php } ?>
         </div>
 	    <div class="form-group">
             <label for="enum">LEVEL <?php echo form_error('LEVEL') ?></label>
@@ -62,6 +81,7 @@
                 <option value="<?php echo $LEVEL ?>"><?php echo $LEVEL ?></option>
                 <option value="user">user</option>
                 <option value="admin">admin</option>
+                <option value="superadmin">superadmin</option>
             </select>
         </div>
 	    <input type="hidden" name="ID_USER" value="<?php echo $ID_USER; ?>" /> 

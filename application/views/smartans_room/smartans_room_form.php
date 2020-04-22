@@ -22,11 +22,25 @@
         </div>
         <div class="form-group">
             <label for="varchar">ACTIVE FLAG</label>
-            <select name="ACTIVE_FLAG" class="form-control" required="">
+            <!-- <select name="ACTIVE_FLAG" class="form-control" required="">
                 <option value="<?php echo $ACTIVE_FLAG ?>"><?php echo $ACTIVE_FLAG ?></option>
                 <option value="1">AKTIF</option>
                 <option value="0">NON AKTIF</option>
-            </select>
+            </select> -->
+            <?php 
+            if ($ACTIVE_FLAG == '') {
+                ?>
+                <input type="radio" name="ACTIVE_FLAG" value="1" checked=""> AKTIF
+                <input type="radio" name="ACTIVE_FLAG" value="0" > NON AKTIF
+                <?php
+            } elseif($ACTIVE_FLAG =='1') {
+             ?>
+                <input type="radio" name="ACTIVE_FLAG" value="1" checked=""> AKTIF
+                <input type="radio" name="ACTIVE_FLAG" value="0" > NON AKTIF
+            <?php }else{ ?>
+                <input type="radio" name="ACTIVE_FLAG" value="1" > AKTIF
+                <input type="radio" name="ACTIVE_FLAG" value="0" checked=""> NON AKTIF
+            <?php } ?>
         </div>
 	    <input type="hidden" name="ID" value="<?php echo $ID; ?>" /> 
 	    <button type="submit" class="btn btn-primary"><?php echo $button ?></button> 
