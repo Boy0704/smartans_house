@@ -7,7 +7,9 @@
 	    <div class="form-group">
             <label for="varchar">PASSWORD <?php echo form_error('PASSWORD') ?></label>
             <input type="text" class="form-control" name="PASSWORD" id="PASSWORD" placeholder="PASSWORD" value="" />
-            <p style="color: red">*) Kosongkan jika tidak diubah</p>
+            <?php if ($PASSWORD !=''): ?>
+                <p style="color: red">*) Kosongkan jika tidak diubah</p>
+            <?php endif ?>
         </div>
 	    <div class="form-group">
             <label for="varchar">FIRST NAME <?php echo form_error('FIRST_NAME') ?></label>
