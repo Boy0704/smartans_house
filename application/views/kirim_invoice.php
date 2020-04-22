@@ -3,7 +3,7 @@
 		<div class="panel panel-info">
 		  	<div class="panel-heading">Form Process Invoice</div>
 		  	<div class="panel-body">
-		  		<form action="web/create_invoice">
+		  		<form action="web/create_invoice" method="POST">
 		  			<div class="form-group">
 		  				<label>Location ID</label>
 		  				<select class="form-control select2" name="LOCATION_ID" required="">
