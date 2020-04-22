@@ -9,7 +9,7 @@ $data = $this->db->get_where('smartans_tagihan_header', array('no_invoice'=>$inv
   <table style="max-width:670px;margin:50px auto 10px;background-color:#fff;padding:50px;-webkit-border-radius:3px;-moz-border-radius:3px;border-radius:3px;-webkit-box-shadow:0 1px 3px rgba(0,0,0,.12),0 1px 2px rgba(0,0,0,.24);-moz-box-shadow:0 1px 3px rgba(0,0,0,.12),0 1px 2px rgba(0,0,0,.24);box-shadow:0 1px 3px rgba(0,0,0,.12),0 1px 2px rgba(0,0,0,.24); border-top: solid 10px green;">
     <thead>
       <tr>
-        <th style="text-align:left;"><img style="max-width: 150px;" src="<?php echo base_url() ?>/image/logo.png" alt="Smartans House"></th>
+        <th style="text-align:left;"><img style="max-width: 150px;" src="<?php echo base_url() ?>/image/logo.jpeg" alt="Smartans House"></th>
         <th style="text-align:right;font-weight:400;"><?php echo date_indo(substr($data->date_create, 0,10)) ?></th>
       </tr>
     </thead>
@@ -37,7 +37,7 @@ $data = $this->db->get_where('smartans_tagihan_header', array('no_invoice'=>$inv
         <td style="width:50%;padding:20px;vertical-align:top">
           <p style="margin:0 0 10px 0;padding:0;font-size:14px;"><span style="display:block;font-weight:bold;font-size:13px;">Location ID</span> <?php echo get_data('smartans_user','id_user',$data->id_user,'LOCATION_ID') ?></p>
           <p style="margin:0 0 10px 0;padding:0;font-size:14px;"><span style="display:block;font-weight:bold;font-size:13px;">Room ID</span> <?php echo get_data('smartans_user','id_user',$data->id_user,'ROOM_ID') ?></p>
-          <!-- <p style="margin:0 0 10px 0;padding:0;font-size:14px;"><span style="display:block;font-weight:bold;font-size:13px;">Efektif Date</span> <?php echo $this->db->get_where('smartans_tarif', array('LOCATION_ID'=>get_data('smartans_user','id_user',$data->id_user,'LOCATION_ID'),'ROOM_NO'=>get_data('smartans_user','id_user',$data->id_user,'ROOM_ID')))->row()->START_DATE.'/'.$this->db->get_where('smartans_tarif', array('LOCATION_ID'=>get_data('smartans_user','id_user',$data->id_user,'LOCATION_ID'),'ROOM_NO'=>get_data('smartans_user','id_user',$data->id_user,'ROOM_ID')))->row()->END_DATE; ?> </p> -->
+          <p style="margin:0 0 10px 0;padding:0;font-size:14px;"><span style="display:block;font-weight:bold;font-size:13px;">Month</span> <?php echo bulan_indo($data->bulan).' '.$data->tahun ?> </p>
         </td>
       </tr>
       <tr>
@@ -53,7 +53,7 @@ $data = $this->db->get_where('smartans_tagihan_header', array('no_invoice'=>$inv
           </p>
           <?php } ?>
           <?php 
-        $paygate_status = $this->db->get_where('smartans_location', array('LOCATION_ID'=>get_data('smartans_user','id_user',$data->id_user,'LOCATION_ID')))->row()->PAYGATE_FLAG;
+          $paygate_status = $this->db->get_where('smartans_location', array('LOCATION_ID'=>get_data('smartans_user','id_user',$data->id_user,'LOCATION_ID')))->row()->PAYGATE_FLAG;
         if ($paygate_status == '0') {
           # code...
         }else{

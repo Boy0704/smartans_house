@@ -9,7 +9,7 @@
 					<th>Location ID</th>
 					<th>Room ID</th>
 					<th>Total Tagihan</th>
-					<th>Date Create</th>
+					<th>Month</th>
 					<th>Status</th>
 					<th>Option</th>
 				</tr>
@@ -38,7 +38,7 @@
 					<td><?php echo get_data('smartans_user','ID_USER',$value->id_user,'LOCATION_ID') ?></td>
 					<td><?php echo get_data('smartans_user','ID_USER',$value->id_user,'ROOM_ID') ?></td>
 					<td><?php echo number_format($value->total_tagihan) ?></td>
-					<td><?php echo $value->date_create ?></td>
+					<td><?php echo bulan_indo($value->bulan).' '.$value->tahun ?></td>
 					<td>
 						<?php 
 						if ($value->status == 'PAID') {

@@ -38,8 +38,19 @@
 		  				<input type="radio" name="email" value="0"> Tidak
 		  			</div>
 		  			<div class="form-group">
-		  				<label>Bulan</label>
-		  				<input type="number" name="bulan" min="1" max="12" class="form-control" placeholder="1 - 12" required="">
+		  				<div class="row">
+		  					<div class="col-md-3">
+		  						<label>Bulan</label>
+		  						<input type="number" name="bulan" min="1" max="12" class="form-control" placeholder="1 - 12" required="">
+		  					</div>
+		  					<div class="col-md-3">
+		  						<label>Tahun</label>
+		  						<select name="tahun" class="form-control">
+		  							<option value=""><?php echo date('Y'); ?></option>
+		  							<option value=""><?php echo date('Y', strtotime('-1 year', strtotime(date('Y')))); ?></option>
+		  						</select>
+		  					</div>
+		  				</div>
 		  			</div>
 		  			<!-- <div class="form-group">
 		  				<label>Dari Tanggal</label>

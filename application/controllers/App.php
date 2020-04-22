@@ -32,8 +32,8 @@ class App extends CI_Controller {
     public function detail_inv($id)
     {
         $data = array(
-            'konten' => 'template_mail',
-            'judul_page' => 'Detail',
+            'konten' => 'detail_billing',
+            'judul_page' => 'Detail Billing',
         );
         $this->load->view('v_index', $data);
     }

@@ -23,6 +23,7 @@ class Web extends CI_Controller {
 		$ROOM_ID = $this->input->post('ROOM_ID');
 		$EMAIL = $this->input->post('email');
 		$BULAN = $this->input->post('bulan');
+		$TAHUN = $this->input->post('tahun');
 		
 		$this->db->where('LEVEL', 'user');
 		$this->db->where('LOCATION_ID', $LOCATION_ID);
@@ -66,7 +67,8 @@ class Web extends CI_Controller {
 				'total_tagihan'=> $total_tagihan,
 				'invoice_url'=> $url_back,
 				'invoice_id_xendit'=> $id,
-				'bulan' => $BULAN
+				'bulan' => $BULAN,
+				'tahun' => $TAHUN
 			));
 
 			$id_tagihan = $this->db->insert_id();
@@ -81,18 +83,22 @@ class Web extends CI_Controller {
 			$this->db->insert('smartans_tagihan_detail', array(
 				'id_tagihan'=> $id_tagihan,
 				'detail_tagihan'=> 'Listrik',
-				'jumlah'=>$total_power_usage*$tarif_listrik
+				'jumlah'=>$total_power_usage*$tarif_listrik,
+				'usage' => $total_power_usage
 			));
 
 			$this->db->insert('smartans_tagihan_detail', array(
 				'id_tagihan'=> $id_tagihan,
 				'detail_tagihan'=> 'Air',
-				'jumlah'=>$total_water_usage*$tarif_air
+				'jumlah'=>$total_water_usage*$tarif_air,
+				'usage' => $total_water_usage
 			));
 
 			if ($EMAIL == '1') {
 				$this->kirim_email($no_invoice);
 			}
+			$this->session->set_flashdata('message', alert_biasa('Tagihan Berhasil dibuat !','success'));
+			redirect('app/billing_list','refresh');
 			
 
 		}
@@ -106,9 +112,14 @@ class Web extends CI_Controller {
 
 		    if ($_SERVER["REQUEST_METHOD"] === "POST") {
 		        $data = file_get_contents("php://input");
-		        log_r("\n\$data contains the updated invoice data \n\n");
-		        log_r($data);
-		        log_r("\n\nUpdate your database with the invoice status \n\n");
+		        log_data("\n\$data contains the updated invoice data \n\n");
+		        log_data($data);
+		        $d = json_decode($data);
+		        $this->db->where('no_invoice', $d->external_id);
+		        $this->db->update('smartans_tagihan_header', array('status'=>$d->status));
+		        // log_r($d);
+		        $this->db->insert('smartans_paygate', $d);
+		        log_data("\n\nUpdate your database with the invoice status \n\n");
 		    } else {
 		        log_r("Cannot ".$_SERVER["REQUEST_METHOD"]." ".$_SERVER["SCRIPT_NAME"]);
 		    }
@@ -123,6 +134,8 @@ class Web extends CI_Controller {
 
 	    private function kirim_email($no_invoice)
 	    {
+	    	$data_tagihan = $this->db->get_where('smartans_tagihan_header', array('no_invoice'=>$no_invoice))->row();
+	    	$email = get_data('smartans_user','id_user',$data_tagihan->id_user,'EMAIL');
 	    	$email_saya = "noreplay@hexindo-tbk.co.id";
 			$pass_saya  = "";
 			//konfigurasi email

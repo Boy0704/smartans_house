@@ -58,8 +58,8 @@
       <?php } else { ?>
 
         <li><a href="app/billing_list"><i class="fa fa-money"></i> <span>Billing List</span></a></li>
-        <li><a href="app/power_usage"><i class="fa fa-battery-3"></i> <span>Power Usage</span></a></li>
-        <li><a href="app/water_usage"><i class="fa fa-hourglass-start"></i> <span>Water Usage</span></a></li>
+       <!--  <li><a href="app/power_usage"><i class="fa fa-battery-3"></i> <span>Power Usage</span></a></li>
+        <li><a href="app/water_usage"><i class="fa fa-hourglass-start"></i> <span>Water Usage</span></a></li> -->
       
 
       <?php } ?>
