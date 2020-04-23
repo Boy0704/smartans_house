@@ -35,9 +35,22 @@ class Web extends CI_Controller {
 		$this->db->where('LEVEL', 'user');
 		$this->db->where('LOCATION_ID', $LOCATION_ID);
 		$this->db->where('ACTIVE_FLAG', 'y');
+
+		//cek bulan bukan bulan saat ini
+		$bln_now = date('m');
+		$thn_now = date('Y');
+		if (intval($bln_now) < $BULAN && $thn_now == $TAHUN) {
+			$this->session->set_flashdata('message', alert_biasa('ada kesalahan silahkan ulangi lagi !','info'));
+			redirect('app/send_inv','refresh');
+			exit;
+		}
+
 		if ($ROOM_ID != '0') {
 			$this->db->where('ROOM_ID', $ROOM_ID);
-			$type ='cut_off';
+			if (intval($bln_now) == $BULAN && $thn_now == $TAHUN) {
+				$type ='cut_off';
+			}
+			
 		}
 		$a = $this->db->get('smartans_user');
 		if ($a->num_rows() == 0) {
