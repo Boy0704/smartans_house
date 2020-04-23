@@ -30,16 +30,33 @@ class Web extends CI_Controller {
 		if ($ROOM_ID != '0') {
 			$this->db->where('ROOM_ID', $ROOM_ID);
 		}
-		foreach ($this->db->get('smartans_user')->result() as $key => $value) {
+		$a = $this->db->get('smartans_user');
+
+		if ($a->num_rows() == 0) {
+			$this->session->set_flashdata('message', alert_biasa('Tagihan gagal di buat, tidak ada user terdaftar di room ini!','info'));
+			redirect('app/send_inv','refresh');
+			exit;
+		}
+
+		foreach ($a->result() as $key => $value) {
 
 			$no_invoice = create_random(8);
+
 			$total_power_usage = total_power_usage($value->LOCATION_ID,$value->ROOM_ID,$BULAN,$TAHUN);
 			$total_water_usage = total_water_usage($value->LOCATION_ID,$value->ROOM_ID,$BULAN,$TAHUN);
 
 			$this->db->where('LOCATION_ID', $value->LOCATION_ID);
 			$this->db->where('ROOM_NO', $value->ROOM_ID);
 			$this->db->order_by('END_DATE', 'desc');
-			$tarif_room = $this->db->get('smartans_tarif')->row()->TARIF_ROOM;
+			$tarif_s = $this->db->get('smartans_tarif');
+			if ($tarif_s->num_rows() == 0) {
+				$this->session->set_flashdata('message', alert_biasa('Tagihan gagal di buat, tarif di ROOM '.$value->ROOM_ID.' belum di set!','info'));
+				redirect('app/send_inv','refresh');
+				exit;
+			}
+			$tarif_room = $tarif_s->row()->TARIF_ROOM;
+
+
 			$this->db->where('LOCATION_ID', $value->LOCATION_ID);
 			$this->db->where('ROOM_NO', $value->ROOM_ID);
 			$this->db->order_by('END_DATE', 'desc');
@@ -48,7 +65,7 @@ class Web extends CI_Controller {
 			$this->db->where('ROOM_NO', $value->ROOM_ID);
 			$this->db->order_by('END_DATE', 'desc');
 			$tarif_air = $this->db->get('smartans_tarif')->row()->TARIF_AIR;
-
+			
 			$total_tagihan = ($total_water_usage*$tarif_air) + ($total_power_usage*$tarif_listrik) + $tarif_room;
 
 			$params = ['external_id' => $no_invoice,
@@ -60,6 +77,7 @@ class Web extends CI_Controller {
 			$paygate_status = $this->db->get_where('smartans_location', array('LOCATION_ID'=>$LOCATION_ID))->row()->PAYGATE_FLAG;
 	        if ($paygate_status == '0') {
 	          # code...
+
 	        }else{
 
 				$createInvoice = \Xendit\Invoice::create($params);
