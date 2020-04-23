@@ -28,7 +28,7 @@
 					}
 					$this->db->where_in('id_user', $d_user);
 				}
-				$this->db->order_by('date_create', 'desc');
+				$this->db->order_by('id_tagihan', 'desc');
 				$data = $this->db->get('smartans_tagihan_header');
 				foreach ($data->result() as $key => $value) {
 				 ?>
