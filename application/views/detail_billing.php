@@ -34,7 +34,7 @@ $data = $this->db->get_where('smartans_tagihan_header', array('no_invoice'=>$inv
 					<?php 
 					if ($data->type == 'cut_off') {
 					 ?>
-					<a href="app/power_usage?LOCATION_ID=<?php echo get_data('smartans_user','id_user',$data->id_user,'LOCATION_ID') ?>&ROOM_ID=<?php echo get_data('smartans_user','id_user',$data->id_user,'ROOM_ID') ?>&tgl1=<?php echo $data->$tgl1 ?>&tgl2=<?php echo $data->$tgl2 ?>" class="label label-info">Lihat Detail</a>
+					<a href="app/power_usage?LOCATION_ID=<?php echo get_data('smartans_user','id_user',$data->id_user,'LOCATION_ID') ?>&ROOM_ID=<?php echo get_data('smartans_user','id_user',$data->id_user,'ROOM_ID') ?>&tgl1=<?php echo $data->tgl1 ?>&tgl2=<?php echo $data->tgl2 ?>" class="label label-info">Lihat Detail</a>
 					<?php } else { ?>
 					<a href="app/detail_listrik/<?php echo $data->bulan.'/'.$data->tahun ?>?LOCATION_ID=<?php echo get_data('smartans_user','id_user',$data->id_user,'LOCATION_ID') ?>&ROOM_ID=<?php echo get_data('smartans_user','id_user',$data->id_user,'ROOM_ID') ?>" class="label label-info">Lihat Detail</a>
 				<?php } ?>
@@ -58,7 +58,7 @@ $data = $this->db->get_where('smartans_tagihan_header', array('no_invoice'=>$inv
 					<?php 
 					if ($data->type == 'cut_off') {
 					 ?>
-					<a href="app/water_usage?LOCATION_ID=<?php echo get_data('smartans_user','id_user',$data->id_user,'LOCATION_ID') ?>&ROOM_ID=<?php echo get_data('smartans_user','id_user',$data->id_user,'ROOM_ID') ?>&tgl1=<?php echo $data->$tgl1 ?>&tgl2=<?php echo $data->$tgl2 ?>" class="label label-info">Lihat Detail</a>
+					<a href="app/water_usage?LOCATION_ID=<?php echo get_data('smartans_user','id_user',$data->id_user,'LOCATION_ID') ?>&ROOM_ID=<?php echo get_data('smartans_user','id_user',$data->id_user,'ROOM_ID') ?>&tgl1=<?php echo $data->tgl1 ?>&tgl2=<?php echo $data->tgl2 ?>" class="label label-info">Lihat Detail</a>
 					<?php } else { ?>
 					<a href="app/detail_air/<?php echo $data->bulan.'/'.$data->tahun ?>?LOCATION_ID=<?php echo get_data('smartans_user','id_user',$data->id_user,'LOCATION_ID') ?>&ROOM_ID=<?php echo get_data('smartans_user','id_user',$data->id_user,'ROOM_ID') ?>" class="label label-info">Lihat Detail</a>
 					<?php } ?>
