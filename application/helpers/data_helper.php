@@ -44,7 +44,7 @@ function total_water_usage($location_id,$room_id,$bulan,$tahun)
 	if ($cek_str == 1) {
 		$bulan = '0'.$bulan;
 	}
-	$total = $CI->db->query("SELECT sum(VOLUME) AS total FROM smartans_water_meter where LOCATION_ID='$location_id' AND ROOM_ID='$room_id' AND DATE_TIME LIKE '$tahun-$bulan%' ")->row()->total;
+	$total = $CI->db->query("SELECT sum(WATER_USAGE) AS total FROM SMARTANS_WATER_METER_V where location_id='$location_id' AND room_id='$room_id' AND MDATE LIKE '$tahun-$bulan%' ")->row()->total;
 	return $total;
 }
 

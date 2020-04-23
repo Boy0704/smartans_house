@@ -52,6 +52,30 @@ class App extends CI_Controller {
         }
     }
 
+    public function detail_air($bulan,$tahun)
+    {
+        
+        $data = array(
+            'konten' => 'detail_water_usage1',
+            'judul_page' => 'Water Usage',
+            'bulan'=>$bulan,
+            'tahun'=>$tahun,
+        );
+        $this->load->view('v_index', $data);
+    }
+
+    public function detail_listrik($bulan,$tahun)
+    {
+        
+        $data = array(
+            'konten' => 'detail_power_usage1',
+            'judul_page' => 'Power Usage',
+            'bulan'=>$bulan,
+            'tahun'=>$tahun,
+        );
+        $this->load->view('v_index', $data);
+    }
+
     public function detail_inv($id)
     {
         $data = array(
