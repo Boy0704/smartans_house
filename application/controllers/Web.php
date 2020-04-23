@@ -33,11 +33,21 @@ class Web extends CI_Controller {
 		foreach ($this->db->get('smartans_user')->result() as $key => $value) {
 
 			$no_invoice = create_random(8);
-			$total_power_usage = total_power_usage($value->LOCATION_ID,$value->ROOM_ID,$BULAN);
-			$total_water_usage = total_water_usage($value->LOCATION_ID,$value->ROOM_ID,$BULAN);
-			$tarif_room = $this->db->get_where('smartans_tarif', array('LOCATION_ID'=>$value->LOCATION_ID,'ROOM_NO'=>$value->ROOM_ID))->row()->TARIF_ROOM;
-			$tarif_listrik = $this->db->get_where('smartans_tarif', array('LOCATION_ID'=>$value->LOCATION_ID,'ROOM_NO'=>$value->ROOM_ID))->row()->TARIF_LISTRIK;
-			$tarif_air = $this->db->get_where('smartans_tarif', array('LOCATION_ID'=>$value->LOCATION_ID,'ROOM_NO'=>$value->ROOM_ID))->row()->TARIF_AIR;
+			$total_power_usage = total_power_usage($value->LOCATION_ID,$value->ROOM_ID,$BULAN,$TAHUN);
+			$total_water_usage = total_water_usage($value->LOCATION_ID,$value->ROOM_ID,$BULAN,$TAHUN);
+
+			$this->db->where('LOCATION_ID', $value->LOCATION_ID);
+			$this->db->where('ROOM_NO', $value->ROOM_ID);
+			$this->db->order_by('END_DATE', 'desc');
+			$tarif_room = $this->db->get('smartans_tarif')->row()->TARIF_ROOM;
+			$this->db->where('LOCATION_ID', $value->LOCATION_ID);
+			$this->db->where('ROOM_NO', $value->ROOM_ID);
+			$this->db->order_by('END_DATE', 'desc');
+			$tarif_listrik = $this->db->get('smartans_tarif')->row()->TARIF_LISTRIK;
+			$this->db->where('LOCATION_ID', $value->LOCATION_ID);
+			$this->db->where('ROOM_NO', $value->ROOM_ID);
+			$this->db->order_by('END_DATE', 'desc');
+			$tarif_air = $this->db->get('smartans_tarif')->row()->TARIF_AIR;
 
 			$total_tagihan = ($total_water_usage*$tarif_air) + ($total_power_usage*$tarif_listrik) + $tarif_room;
 
