@@ -1,7 +1,7 @@
 <div class="row">
 	<div class="col-md-12">
 		<div class="panel panel-info">
-		  	<div class="panel-heading">Form Process Invoice</div>
+		  	<div class="panel-heading">Form Process Tagihan</div>
 		  	<div class="panel-body">
 		  		<form action="web/create_invoice" method="POST">
 		  			<div class="form-group">

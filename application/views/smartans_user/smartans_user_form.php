@@ -81,9 +81,11 @@
             <!-- <input type="text" class="form-control" name="LEVEL" id="LEVEL" placeholder="LEVEL" value="<?php echo $LEVEL; ?>" /> -->
             <select class="form-control" name="LEVEL">
                 <option value="<?php echo $LEVEL ?>"><?php echo $LEVEL ?></option>
-                <option value="user">user</option>
-                <option value="admin">admin</option>
-                <option value="superadmin">superadmin</option>
+                <?php if ($this->session->userdata('level') == 'admin' || $this->session->userdata('level') =='user'): ?>
+                    <option value="user">user</option>
+                    <option value="admin">admin</option>
+                    <option value="superadmin">superadmin</option>
+                <?php endif ?>
             </select>
         </div>
 	    <input type="hidden" name="ID_USER" value="<?php echo $ID_USER; ?>" /> 

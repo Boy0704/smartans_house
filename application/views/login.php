@@ -147,6 +147,9 @@
 
 
                                     <button id="btnLogin" class="btn">SIMPAN!</button>
+                                    <p>
+                                        <b>Sudah punya akun, </p><a class="btn btn-primary" id="btnl">LOGIN DISINI</a></b>
+
                                 </form>
                             </div>
                         </div>
@@ -170,6 +173,10 @@
                 $('#btndaftar').click(function(event) {
                     $('#daftar').show();
                     $('#login').hide();
+                });
+                $('#btnl').click(function(event) {
+                    $('#daftar').hide();
+                    $('#login').show();
                 });
             });
             // $(document).ready(function() {

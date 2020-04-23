@@ -4,12 +4,18 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 class App extends CI_Controller {
 
 	public $image = '';
-	
-	public function index()
-	{
+
+    public function __construct()
+    {
+        parent::__construct();
         if ($this->session->userdata('level') == '') {
             redirect('login');
         }
+    }
+	
+	public function index()
+	{
+        
 		$data = array(
 			'konten' => 'home_admin',
             'judul_page' => 'Dashboard',

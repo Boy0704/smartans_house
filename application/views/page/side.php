@@ -37,7 +37,7 @@
         <li><a href="smartans_room"><i class="fa fa-bank"></i> <span>Room</span></a></li>
         <li><a href="smartans_tarif"><i class="fa fa-credit-card"></i> <span>Master Tarif</span></a></li>
         <li><a href="app/billing_list"><i class="fa fa-money"></i> <span>Billing List</span></a></li>
-        <li><a href="app/send_inv"><i class="fa fa-send"></i> <span>Create Invoice</span></a></li>
+        <li><a href="app/send_inv"><i class="fa fa-send"></i> <span>Create Tagihan</span></a></li>
         <li><a href="app/power_usage"><i class="fa fa-battery-3"></i> <span>Power Usage</span></a></li>
         <li><a href="app/water_usage"><i class="fa fa-hourglass-start"></i> <span>Water Usage</span></a></li>
         

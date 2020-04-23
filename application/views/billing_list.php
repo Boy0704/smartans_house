@@ -4,7 +4,7 @@
 		<table class="table table-bordered" id="example1">
 			<thead>
 				<tr>
-					<th>No Invoice</th>
+					<th>Trx ID</th>
 					<th>Nama User</th>
 					<th>Location ID</th>
 					<th>Room ID</th>
