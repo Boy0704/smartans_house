@@ -55,6 +55,13 @@ class Login extends CI_Controller {
 
 	public function daftar()
 	{
+		$cek = $this->db->get_where('smartans_user', array('EMAIL'=>$this->input->post('email')));
+		if ($cek > 0) {
+			$this->session->set_flashdata('message', alert_biasa('Email sudah terdaftar, silahkan gunakan email lain','info'));
+			redirect('login','refresh');
+			exit();
+		}
+
 		$data = array(
 			'FIRST_NAME' => $this->input->post('first_name'),
 			'LAST_NAME' => $this->input->post('last_name'),
