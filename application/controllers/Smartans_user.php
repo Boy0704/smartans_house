@@ -111,6 +111,7 @@ class Smartans_user extends CI_Controller
 		'ROOM_ID' => '',
 		'ACTIVE_FLAG' => $this->input->post('ACTIVE_FLAG',TRUE),
 		'LEVEL' => $this->input->post('LEVEL',TRUE),
+        'date_create'=>get_waktu();
 	    );
 
             $this->Smartans_user_model->insert($data);

@@ -66,11 +66,13 @@ class Web extends CI_Controller {
 			$total_power_usage = total_power_usage($value->LOCATION_ID,$value->ROOM_ID,$BULAN,$TAHUN);
 			$total_water_usage = total_water_usage($value->LOCATION_ID,$value->ROOM_ID,$BULAN,$TAHUN);
 
+			//ambil start date
+			$this->db->where('LOCATION_ID', $value->LOCATION_ID);
+			$this->db->where('ROOM_NO', $value->ROOM_ID);
+			$this->db->order_by('END_DATE', 'desc');
+			$d = $this->db->get('smartans_tarif')->row();
 			if ($type == 'cut_off') {
-				$this->db->where('LOCATION_ID', $value->LOCATION_ID);
-				$this->db->where('ROOM_NO', $value->ROOM_ID);
-				$this->db->order_by('END_DATE', 'desc');
-				$d = $this->db->get('smartans_tarif')->row();
+				
 				$total_power_usage = $this->db->query("SELECT sum(POWER_USAGE) as total FROM smartans_daily_power_usage where LOCATION_ID='$location_id' AND ROOM_ID='$room_id' AND USAGE_DATE BETWEEN '$d->START_DATE' AND '$d->END_DATE' ")->row()->total;
 				$total_water_usage = $this->db->query("SELECT sum(WATER_USAGE) AS total FROM SMARTANS_WATER_METER_V where location_id='$location_id' AND room_id='$room_id' AND MDATE BETWEEN '$d->START_DATE' AND '$d->END_DATE' ")->row()->total;
 			}
@@ -136,7 +138,9 @@ class Web extends CI_Controller {
 				'invoice_id_xendit'=> $id,
 				'bulan' => $BULAN,
 				'tahun' => $TAHUN,
-				'type'=>$type
+				'type'=>$type,
+				'tgl1'=>$d->START_DATE,
+				'tgl2'=>$d->END_DATE,
 			));
 
 			$id_tagihan = $this->db->insert_id();

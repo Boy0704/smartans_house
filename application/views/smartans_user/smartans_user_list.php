@@ -54,6 +54,7 @@
             if ($this->session->userdata('level') == 'admin') {
                 $this->db->where_in('LOCATION_ID', $this->session->userdata('location_id'));
             }
+            $this->db->order_by('date_create', 'desc');
             $smartans_user_data = $this->db->get('smartans_user');
             foreach ($smartans_user_data->result() as $smartans_user)
             {
