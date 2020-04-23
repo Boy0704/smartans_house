@@ -26,8 +26,7 @@
 					foreach ($data_user->result() as $rw) {
 						array_push($d_user,$rw->id_user);
 					}
-					$user = implode(',',$d_user);
-					$this->db->where_in('id_user', $user);
+					$this->db->where_in('id_user', $d_user);
 				}
 				$data = $this->db->get('smartans_tagihan_header');
 				foreach ($data->result() as $key => $value) {

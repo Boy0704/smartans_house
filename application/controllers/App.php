@@ -29,6 +29,29 @@ class App extends CI_Controller {
 		$this->load->view('v_index', $data);
     }
 
+    public function ubah_profil($id_user)
+    {
+        if ($_POST) {
+            if ($_POST['pass_new1'] != $_POST['pass_new2']) {
+                $this->session->set_flashdata('message', alert_biasa('Password tidak sama, silahkan ulangi lagi !','info'));
+                redirect('app/ubah_profil/'.$id_user,'refresh');
+                exit();
+            }
+            $this->db->where('id_user', $id_user);
+            $this->db->update('smartans_user', array(
+                'password' => md5($_POST['pass_new1'])
+            ));
+            $this->session->set_flashdata('message', alert_biasa('Password berhasil dirubah, silahkan login lagi !','success'));
+            redirect('login','refresh');
+        } else {
+            $data = array(
+                'konten' => 'ubah_profil',
+                'judul_page' => 'Ubah Password',
+            );
+            $this->load->view('v_index', $data);
+        }
+    }
+
     public function detail_inv($id)
     {
         $data = array(

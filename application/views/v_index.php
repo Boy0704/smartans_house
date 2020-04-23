@@ -80,7 +80,7 @@
               <!-- Menu Footer-->
               <li class="user-footer">
                 <div class="pull-left">
-                  <a href="#" class="btn btn-default btn-flat">Profile</a>
+                  <a href="app/ubah_profil/<?php echo $this->session->userdata('id_user'); ?>" class="btn btn-default btn-flat">Ubah Password</a>
                 </div>
                 <div class="pull-right">
                   <a href="login/logout" class="btn btn-default btn-flat">Keluar</a>

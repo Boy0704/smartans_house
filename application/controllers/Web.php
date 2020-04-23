@@ -27,11 +27,11 @@ class Web extends CI_Controller {
 		
 		$this->db->where('LEVEL', 'user');
 		$this->db->where('LOCATION_ID', $LOCATION_ID);
+		$this->db->where('ACTIVE_FLAG', 'y');
 		if ($ROOM_ID != '0') {
 			$this->db->where('ROOM_ID', $ROOM_ID);
 		}
 		$a = $this->db->get('smartans_user');
-
 		if ($a->num_rows() == 0) {
 			$this->session->set_flashdata('message', alert_biasa('Tagihan gagal di buat, tidak ada user terdaftar di room ini!','info'));
 			redirect('app/send_inv','refresh');
@@ -134,11 +134,12 @@ class Web extends CI_Controller {
 			if ($EMAIL == '1') {
 				$this->kirim_email($no_invoice);
 			}
-			$this->session->set_flashdata('message', alert_biasa('Tagihan Berhasil dibuat !','success'));
-			redirect('app/billing_list','refresh');
+			
 			
 
 		}
+		$this->session->set_flashdata('message', alert_biasa('Tagihan Berhasil dibuat !','success'));
+		redirect('app/billing_list','refresh');
 
 		
 

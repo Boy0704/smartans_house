@@ -53,7 +53,7 @@
         <li><a href="app/send_inv"><i class="fa fa-send"></i> <span>Create Invoice</span></a></li>
         <li><a href="app/power_usage"><i class="fa fa-battery-3"></i> <span>Power Usage</span></a></li>
         <li><a href="app/water_usage"><i class="fa fa-hourglass-start"></i> <span>Water Usage</span></a></li>
-        
+        <li><a href="smartans_user"><i class="fa fa-users"></i> <span>Manajemen User</span></a></li>
 
       <?php } else { ?>
 
