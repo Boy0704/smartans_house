@@ -82,7 +82,7 @@
             <select class="form-control" name="LEVEL">
                 <option value="<?php echo $LEVEL ?>"><?php echo $LEVEL ?></option>
                 <?php if ($this->session->userdata('level') == 'admin' || $this->session->userdata('level') =='user'): ?>
-                    <option value="user">user</option>
+                    <!-- <option value="user">user</option> -->
                     <option value="admin">admin</option>
                     <option value="superadmin">superadmin</option>
                 <?php endif ?>
