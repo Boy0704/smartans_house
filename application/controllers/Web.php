@@ -30,7 +30,7 @@ class Web extends CI_Controller {
 		$EMAIL = $this->input->post('email');
 		$BULAN = $this->input->post('bulan');
 		$TAHUN = $this->input->post('tahun');
-		$type = 'full';
+		
 		
 		$this->db->where('LEVEL', 'user');
 		$this->db->where('LOCATION_ID', $LOCATION_ID);
@@ -60,7 +60,7 @@ class Web extends CI_Controller {
 		}
 
 		foreach ($a->result() as $key => $value) {
-
+			$type = 'full';
 			$no_invoice = create_random(8);
 
 			$total_power_usage = total_power_usage($value->LOCATION_ID,$value->ROOM_ID,$BULAN,$TAHUN);
@@ -71,10 +71,25 @@ class Web extends CI_Controller {
 			$this->db->where('ROOM_NO', $value->ROOM_ID);
 			$this->db->order_by('END_DATE', 'desc');
 			$d = $this->db->get('smartans_tarif')->row();
-			if ($type == 'cut_off') {
+			$start_tgl = $d->START_DATE;
+
+			$cek_str = strlen($BULAN);
+			if ($cek_str == 1) {
+				$bln_tgh = '0'.$BULAN;
+			}
+			if ($type == 'cut_off' && substr($d->START_DATE, 0,7) == substr($d->END_DATE, 0,7)) {
 				
-				$total_power_usage = $this->db->query("SELECT sum(POWER_USAGE) as total FROM smartans_daily_power_usage where LOCATION_ID='$value->LOCATION_ID' AND ROOM_ID='$value->ROOM_ID' AND USAGE_DATE BETWEEN '$d->START_DATE' AND '$d->END_DATE' ")->row()->total;
-				$total_water_usage = $this->db->query("SELECT sum(WATER_USAGE) AS total FROM SMARTANS_WATER_METER_V where location_id='$value->LOCATION_ID' AND room_id='$value->ROOM_ID' AND MDATE BETWEEN '$d->START_DATE' AND '$d->END_DATE' ")->row()->total;
+				$total_power_usage = $this->db->query("SELECT sum(POWER_USAGE) as total FROM smartans_daily_power_usage where LOCATION_ID='$value->LOCATION_ID' AND ROOM_ID='$value->ROOM_ID' AND USAGE_DATE BETWEEN '$start_tgl' AND '$d->END_DATE' ")->row()->total;
+				$total_water_usage = $this->db->query("SELECT sum(WATER_USAGE) AS total FROM SMARTANS_WATER_METER_V where location_id='$value->LOCATION_ID' AND room_id='$value->ROOM_ID' AND MDATE BETWEEN '$start_tgl' AND '$d->END_DATE' ")->row()->total;
+			}elseif ($type == 'cut_off' && substr($d->START_DATE, 0,7) != substr($d->END_DATE, 0,7)) {
+				$start_tgl = substr($d->END_DATE, 0,7).'-01';
+				$total_power_usage = $this->db->query("SELECT sum(POWER_USAGE) as total FROM smartans_daily_power_usage where LOCATION_ID='$value->LOCATION_ID' AND ROOM_ID='$value->ROOM_ID' AND USAGE_DATE BETWEEN '$$start_tgl' AND '$d->END_DATE' ")->row()->total;
+				$total_water_usage = $this->db->query("SELECT sum(WATER_USAGE) AS total FROM SMARTANS_WATER_METER_V where location_id='$value->LOCATION_ID' AND room_id='$value->ROOM_ID' AND MDATE BETWEEN '$start_tgl' AND '$d->END_DATE' ")->row()->total;
+			} elseif ($type == 'full' && $TAHUN.'-'.$bln_tgh == substr($d->END_DATE, 0,7)) {
+				$type='cut_off';
+				$start_tgl = substr($d->END_DATE, 0,7).'-01';
+				$total_power_usage = $this->db->query("SELECT sum(POWER_USAGE) as total FROM smartans_daily_power_usage where LOCATION_ID='$value->LOCATION_ID' AND ROOM_ID='$value->ROOM_ID' AND USAGE_DATE BETWEEN '$$start_tgl' AND '$d->END_DATE' ")->row()->total;
+				$total_water_usage = $this->db->query("SELECT sum(WATER_USAGE) AS total FROM SMARTANS_WATER_METER_V where location_id='$value->LOCATION_ID' AND room_id='$value->ROOM_ID' AND MDATE BETWEEN '$start_tgl' AND '$d->END_DATE' ")->row()->total;
 			}
 			$this->db->where('LOCATION_ID', $value->LOCATION_ID);
 			$this->db->where('ROOM_NO', $value->ROOM_ID);
@@ -138,7 +153,7 @@ class Web extends CI_Controller {
 				'bulan' => $BULAN,
 				'tahun' => $TAHUN,
 				'type'=>$type,
-				'tgl1'=>$d->START_DATE,
+				'tgl1'=>$start_tgl,
 				'tgl2'=>$d->END_DATE,
 			));
 
