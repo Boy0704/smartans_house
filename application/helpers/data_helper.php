@@ -1,5 +1,40 @@
 <?php 
 
+function cek_tarif($tgl,$location,$room)
+{
+	$CI =& get_instance();
+
+	
+
+	foreach ($CI->db->get_where('smartans_tarif',array('LOCATION_ID'=>$location,'ROOM_NO'=>$room))->result() as $rw) {
+
+		// jk bulan bulan yg di input == bulan berjalan
+		// maka ambil start date nya diatas yg di atas tgl buat tagihan
+
+		// jika bulan bulan yg di input == bulan lalu
+		// dan jika ada 3 macam maka ambil yg terakhir dari bulan tersebut
+		if (strtotime($tgl) == strtotime(date('Y-m'))) {
+			if ( strtotime($rw->START_DATE) < strtotime(date('Y-m-d')) && strtotime($rw->END_DATE) > strtotime(date('Y-m-d'))  ) {
+				return $rw->ID_TARIF;
+			} else {
+				return '0';
+			}
+		} elseif (strtotime($tgl) < strtotime(date('Y-m'))) {
+			$tgl_akhir = akhir_tgl(substr($tgl, 0,4), substr($tgl, 5,7));
+			if ( strtotime($rw->START_DATE) < strtotime($tgl_akhir) && strtotime($rw->END_DATE) > strtotime($tgl_akhir)  ) {
+				return $rw->ID_TARIF;
+			} else {
+				return '0';
+			}
+		} else {
+			// tgl yg di pilih > dari tanggal berjalan
+			return 'gagal';
+		}
+
+		
+	}
+}
+
 function akhir_tgl($year, $month) {
 	return date("Y-m-d", strtotime('-1 second', strtotime('+1 month',strtotime($month . '/01/' . $year. ' 00:00:00'))));
 }

@@ -14,6 +14,40 @@ class Web extends CI_Controller {
 	}
 	public function tes()
 	{
+
+		// $tgl = '2020-05';
+		// foreach ($this->db->get_where('smartans_tarif',array('LOCATION_ID'=>'VERDANT','ROOM_NO'=>'R12'))->result() as $rw) {
+
+		// 	// jk bulan bulan yg di input == bulan berjalan
+		// 	// maka ambil start date nya diatas yg di atas tgl buat tagihan
+
+		// 	// jika bulan bulan yg di input == bulan lalu
+		// 	// dan jika ada 3 macam maka ambil yg terakhir dari bulan tersebut
+		// 	if (strtotime($tgl) == strtotime(date('Y-m'))) {
+		// 		log_data('kondisi 1');
+		// 		if ( strtotime($rw->START_DATE) < strtotime(date('Y-m-d')) && strtotime($rw->END_DATE) > strtotime(date('Y-m-d'))  ) {
+		// 			echo $rw->ID_TARIF;
+		// 		} else {
+		// 			echo '0';
+		// 		}
+		// 	} elseif (strtotime($tgl) < strtotime(date('Y-m'))) {
+		// 		log_data('kondisi 1');
+		// 		$tgl_akhir = akhir_tgl(substr($tgl, 0,4), substr($tgl, 5,7));
+		// 		if ( strtotime($rw->START_DATE) < strtotime($tgl_akhir) && strtotime($rw->END_DATE) > strtotime($tgl_akhir)  ) {
+		// 			echo $rw->ID_TARIF;
+		// 		} else {
+		// 			echo '0';
+		// 		}
+		// 	} else {
+		// 		echo '0';
+		// 	}
+
+			
+		// }
+
+		// exit();
+
+		log_r(cek_tarif('2020-02','VERDANT','R11'));
 		echo date("Y-m-d", strtotime('-1 second', strtotime('+1 month',strtotime('02' . '/01/' . '2020'. ' 00:00:00'))));
 		exit();
 
@@ -75,23 +109,32 @@ class Web extends CI_Controller {
 					$type ='cut_off';
 				}
 			}
+
+			$cek_str = strlen($BULAN);
+			if ($cek_str == 1) {
+				$bln_tgh = '0'.$BULAN;
+			}
+
 			$no_invoice = create_random(8);
 
 			$total_power_usage = total_power_usage($value->LOCATION_ID,$value->ROOM_ID,$BULAN,$TAHUN);
 			$total_water_usage = total_water_usage($value->LOCATION_ID,$value->ROOM_ID,$BULAN,$TAHUN);
 
 			//ambil start date
-			$this->db->where('LOCATION_ID', $value->LOCATION_ID);
-			$this->db->where('ROOM_NO', $value->ROOM_ID);
-			$this->db->order_by('END_DATE', 'desc');
+			//$this->db->where('LOCATION_ID', $value->LOCATION_ID);
+			//$this->db->where('ROOM_NO', $value->ROOM_ID);
+			$id_tarif = cek_tarif($TAHUN.'-'.$bln_tgh,$value->LOCATION_ID,$value->ROOM_ID);
+			if ($id_tarif == 'gagal') {
+				$this->session->set_flashdata('message', alert_biasa('Tagihan gagal di buat, bulan yg di pilih di atas bulan berjalan!','info'));
+				redirect('app/send_inv','refresh');
+				exit;
+			}
+			$this->db->where('ID_TARIF', $id_tarif);
 			$d = $this->db->get('smartans_tarif')->row();
 			$start_tgl = $d->START_DATE;
 			$end_tgl = $d->END_DATE;
 
-			$cek_str = strlen($BULAN);
-			if ($cek_str == 1) {
-				$bln_tgh = '0'.$BULAN;
-			}
+			
 
 			if ($type == 'cut_off' && substr($d->START_DATE, 0,7) == substr($d->END_DATE, 0,7)) {
 				log_data('kondisi 1');
@@ -184,7 +227,7 @@ class Web extends CI_Controller {
 
 			$this->db->where('LOCATION_ID', $value->LOCATION_ID);
 			$this->db->where('ROOM_NO', $value->ROOM_ID);
-			$this->db->order_by('END_DATE', 'desc');
+			$this->db->where('ID_TARIF', $id_tarif);
 			$tarif_s = $this->db->get('smartans_tarif');
 			if ($tarif_s->num_rows() == 0) {
 				$this->session->set_flashdata('message', alert_biasa('Tagihan gagal di buat, tarif di ROOM '.$value->ROOM_ID.' belum di set!','info'));
@@ -225,11 +268,14 @@ class Web extends CI_Controller {
 				$url_back = $getInvoice['invoice_url'];
 			}
 
-			$cek_ = $this->db->get_where('smartans_tagihan_header', array('id_user'=>$value->ID_USER,'bulan'=>$BULAN,'tahun'=>$TAHUN));
+			$cek_ = $this->db->get_where('smartans_tagihan_header', array('id_user'=>$value->ID_USER,'bulan'=>$BULAN,'tahun'=>$TAHUN,'type'=>$type, 'tgl1'=>$start_tgl,'tgl2'=>$end_tgl));
 			if ($cek_->num_rows() > 0) {
 				$this->db->where('id_user', $value->ID_USER);
 				$this->db->where('bulan', $BULAN);
 				$this->db->where('tahun', $TAHUN);
+				$this->db->where('type', $type);
+				$this->db->where('tgl1', $start_tgl);
+				$this->db->where('tgl2', $end_tgl);
 				$this->db->delete('smartans_tagihan_header');
 			}
 
