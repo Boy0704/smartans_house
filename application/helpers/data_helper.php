@@ -1,5 +1,14 @@
 <?php 
 
+
+function durasi_tgl($tgl1,$tgl2)
+{
+	$datetime1 = new DateTime($tgl1);
+  	$datetime2 = new DateTime($tgl2);
+  	$difference = $datetime1->diff($datetime2);
+  	return $difference->days;
+}
+
 function cek_tarif($tgl,$location,$room)
 {
 	$CI =& get_instance();

@@ -88,13 +88,13 @@ class Web extends CI_Controller {
 		$this->db->where('ACTIVE_FLAG', 'y');
 
 		//cek bulan bukan bulan saat ini
-		$bln_now = date('m');
-		$thn_now = date('Y');
-		if (intval($bln_now) < $BULAN && $thn_now == $TAHUN) {
-			$this->session->set_flashdata('message', alert_biasa('ada kesalahan silahkan ulangi lagi !','info'));
-			redirect('app/send_inv','refresh');
-			exit;
-		}
+		// $bln_now = date('m');
+		// $thn_now = date('Y');
+		// if (intval($bln_now) < $BULAN && $thn_now == $TAHUN) {
+		// 	$this->session->set_flashdata('message', alert_biasa('ada kesalahan silahkan ulangi lagi !','info'));
+		// 	redirect('app/send_inv','refresh');
+		// 	exit;
+		// }
 
 		if ($ROOM_ID != '0') {
 			$this->db->where('ROOM_ID', $ROOM_ID);
@@ -107,17 +107,21 @@ class Web extends CI_Controller {
 			exit;
 		}
 
+		$total_dt = 0;
+
 		foreach ($a->result() as $key => $value) {
 			$type = 'full';
-			if ($ROOM_ID != '0') {
-				if (intval($bln_now) == $BULAN && $thn_now == $TAHUN) {
-					$type ='cut_off';
-				}
-			}
+			// if ($ROOM_ID != '0') {
+			// 	if (intval($bln_now) == $BULAN && $thn_now == $TAHUN) {
+			// 		$type ='cut_off';
+			// 	}
+			// }
 
 			$cek_str = strlen($BULAN);
 			if ($cek_str == 1) {
 				$bln_tgh = '0'.$BULAN;
+			} else {
+				$bln_tgh = $BULAN;
 			}
 
 			$no_invoice = create_random(8);
@@ -136,212 +140,259 @@ class Web extends CI_Controller {
 			}
 
 			if ($id_tarif == '') {
-				$this->session->set_flashdata('message', alert_biasa('Tagihan gagal di buat, tarif tidak di temukan di ROOM '.$value->ROOM_ID.' di bulan '.$bln_tgh.' '.$TAHUN.'!','info'));
-				redirect('app/send_inv','refresh');
-				exit;
-			}
-			$this->db->where('ID_TARIF', $id_tarif);
-			$d = $this->db->get('smartans_tarif')->row();
-			$start_tgl = $d->START_DATE;
-			$end_tgl = $d->END_DATE;
+				$total_dt = $total_dt + 0 ;
+				// $this->session->set_flashdata('message', alert_biasa('Tagihan gagal di buat, tarif tidak di temukan di ROOM '.$value->ROOM_ID.' di bulan '.$bln_tgh.' '.$TAHUN.'!','info'));
+				// redirect('app/send_inv','refresh');
+				// exit;
+			} else {
 
-			
+				$total_dt = $total_dt + 1 ;
 
-			if ($type == 'cut_off' && substr($d->START_DATE, 0,7) == substr($d->END_DATE, 0,7)) {
-				log_data('kondisi 1');
+				$this->db->where('ID_TARIF', $id_tarif);
+				$d = $this->db->get('smartans_tarif')->row();
+				$start_tgl = $d->START_DATE;
+				$end_tgl = $d->END_DATE;
+
 				
-				$total_power_usage = $this->db->query("SELECT sum(POWER_USAGE) as total FROM smartans_daily_power_usage where LOCATION_ID='$value->LOCATION_ID' AND ROOM_ID='$value->ROOM_ID' AND USAGE_DATE BETWEEN '$start_tgl' AND '$d->END_DATE' ")->row()->total;
-				$total_water_usage = $this->db->query("SELECT sum(WATER_USAGE) AS total FROM SMARTANS_WATER_METER_V where location_id='$value->LOCATION_ID' AND room_id='$value->ROOM_ID' AND MDATE BETWEEN '$start_tgl' AND '$d->END_DATE' ")->row()->total;
 
-			}elseif ($type == 'cut_off' && substr($d->START_DATE, 0,7) != substr($d->END_DATE, 0,7)) {
+				if ($type == 'cut_off' && substr($d->START_DATE, 0,7) == substr($d->END_DATE, 0,7)) {
+					log_data('kondisi 1');
+					
+					$total_power_usage = $this->db->query("SELECT sum(POWER_USAGE) as total FROM smartans_daily_power_usage where LOCATION_ID='$value->LOCATION_ID' AND ROOM_ID='$value->ROOM_ID' AND USAGE_DATE BETWEEN '$start_tgl' AND '$d->END_DATE' ")->row()->total;
+					$total_water_usage = $this->db->query("SELECT sum(WATER_USAGE) AS total FROM SMARTANS_WATER_METER_V where location_id='$value->LOCATION_ID' AND room_id='$value->ROOM_ID' AND MDATE BETWEEN '$start_tgl' AND '$d->END_DATE' ")->row()->total;
+
+				}elseif ($type == 'cut_off' && substr($d->START_DATE, 0,7) != substr($d->END_DATE, 0,7)) {
 
 
-				log_data('kondisi 2');
+					log_data('kondisi 2');
 
-				if ( strtotime(substr($d->START_DATE, 0,7)) < strtotime($TAHUN.'-'.$bln_tgh) && strtotime($TAHUN.'-'.$bln_tgh) < strtotime(substr($d->END_DATE, 0,7))  ) {
+					if ( strtotime(substr($d->START_DATE, 0,7)) < strtotime($TAHUN.'-'.$bln_tgh) && strtotime($TAHUN.'-'.$bln_tgh) < strtotime(substr($d->END_DATE, 0,7))  ) {
 
-					$type = 'full';
+						$type = 'full';
 
-					$total_power_usage = total_power_usage($value->LOCATION_ID,$value->ROOM_ID,$BULAN,$TAHUN);
-					$total_water_usage = total_water_usage($value->LOCATION_ID,$value->ROOM_ID,$BULAN,$TAHUN);
+						$total_power_usage = total_power_usage($value->LOCATION_ID,$value->ROOM_ID,$BULAN,$TAHUN);
+						$total_water_usage = total_water_usage($value->LOCATION_ID,$value->ROOM_ID,$BULAN,$TAHUN);
 
-				} elseif ( strtotime(substr($d->START_DATE, 0,7)) < strtotime($TAHUN.'-'.$bln_tgh) && strtotime($TAHUN.'-'.$bln_tgh) == strtotime(substr($d->END_DATE, 0,7)) ) {
+					} elseif ( strtotime(substr($d->START_DATE, 0,7)) < strtotime($TAHUN.'-'.$bln_tgh) && strtotime($TAHUN.'-'.$bln_tgh) == strtotime(substr($d->END_DATE, 0,7)) ) {
 
+						$start_tgl = substr($d->END_DATE, 0,7).'-01';
+						$end_tgl = $d->END_DATE;
+
+						$total_power_usage = $this->db->query("SELECT sum(POWER_USAGE) as total FROM smartans_daily_power_usage where LOCATION_ID='$value->LOCATION_ID' AND ROOM_ID='$value->ROOM_ID' AND USAGE_DATE BETWEEN '$start_tgl' AND '$d->END_DATE' ")->row()->total;
+						$total_water_usage = $this->db->query("SELECT sum(WATER_USAGE) AS total FROM SMARTANS_WATER_METER_V where location_id='$value->LOCATION_ID' AND room_id='$value->ROOM_ID' AND MDATE BETWEEN '$start_tgl' AND '$d->END_DATE' ")->row()->total;
+
+					} elseif ( strtotime(substr($d->START_DATE, 0,7)) == strtotime($TAHUN.'-'.$bln_tgh) && strtotime($TAHUN.'-'.$bln_tgh) < strtotime(substr($d->END_DATE, 0,7)) ) {
+						
+
+						$end_tgl = date('Y-m-d');
+
+						$total_power_usage = $this->db->query("SELECT sum(POWER_USAGE) as total FROM smartans_daily_power_usage where LOCATION_ID='$value->LOCATION_ID' AND ROOM_ID='$value->ROOM_ID' AND USAGE_DATE BETWEEN '$start_tgl' AND '$d->END_DATE' ")->row()->total;
+						$total_water_usage = $this->db->query("SELECT sum(WATER_USAGE) AS total FROM SMARTANS_WATER_METER_V where location_id='$value->LOCATION_ID' AND room_id='$value->ROOM_ID' AND MDATE BETWEEN '$start_tgl' AND '$end_tgl' ")->row()->total;
+
+					}
+
+					
+				} elseif ( $type == 'full' && strtotime($TAHUN.'-'.$bln_tgh) == strtotime(substr($d->END_DATE, 0,7)) && strtotime(substr($d->START_DATE, 0,7)) < strtotime($TAHUN.'-'.$bln_tgh) ) {
+
+					log_data('kondisi 3');
+
+					$type='cut_off';
 					$start_tgl = substr($d->END_DATE, 0,7).'-01';
-					$end_tgl = $d->END_DATE;
 
 					$total_power_usage = $this->db->query("SELECT sum(POWER_USAGE) as total FROM smartans_daily_power_usage where LOCATION_ID='$value->LOCATION_ID' AND ROOM_ID='$value->ROOM_ID' AND USAGE_DATE BETWEEN '$start_tgl' AND '$d->END_DATE' ")->row()->total;
 					$total_water_usage = $this->db->query("SELECT sum(WATER_USAGE) AS total FROM SMARTANS_WATER_METER_V where location_id='$value->LOCATION_ID' AND room_id='$value->ROOM_ID' AND MDATE BETWEEN '$start_tgl' AND '$d->END_DATE' ")->row()->total;
 
-				} elseif ( strtotime(substr($d->START_DATE, 0,7)) == strtotime($TAHUN.'-'.$bln_tgh) && strtotime($TAHUN.'-'.$bln_tgh) < strtotime(substr($d->END_DATE, 0,7)) ) {
-					
+				} elseif ( $type == 'full' && strtotime($TAHUN.'-'.$bln_tgh) < strtotime(substr($d->END_DATE, 0,7)) && strtotime(substr($d->START_DATE, 0,7)) < strtotime($TAHUN.'-'.$bln_tgh) ) {
 
-					$end_tgl = date('Y-m-d');
+					log_data('kondisi 4');
+
+					$total_power_usage = total_power_usage($value->LOCATION_ID,$value->ROOM_ID,$BULAN,$TAHUN);
+					$total_water_usage = total_water_usage($value->LOCATION_ID,$value->ROOM_ID,$BULAN,$TAHUN);
+
+				} elseif ( $type == 'full' && substr($d->START_DATE, 0,7) == substr($d->END_DATE, 0,7) ) {
+
+					log_data('kondisi 5');
+
+					$type='cut_off';
 
 					$total_power_usage = $this->db->query("SELECT sum(POWER_USAGE) as total FROM smartans_daily_power_usage where LOCATION_ID='$value->LOCATION_ID' AND ROOM_ID='$value->ROOM_ID' AND USAGE_DATE BETWEEN '$start_tgl' AND '$d->END_DATE' ")->row()->total;
-					$total_water_usage = $this->db->query("SELECT sum(WATER_USAGE) AS total FROM SMARTANS_WATER_METER_V where location_id='$value->LOCATION_ID' AND room_id='$value->ROOM_ID' AND MDATE BETWEEN '$start_tgl' AND '$end_tgl' ")->row()->total;
+					$total_water_usage = $this->db->query("SELECT sum(WATER_USAGE) AS total FROM SMARTANS_WATER_METER_V where location_id='$value->LOCATION_ID' AND room_id='$value->ROOM_ID' AND MDATE BETWEEN '$start_tgl' AND '$d->END_DATE' ")->row()->total;
 
+				} elseif ( $type == 'full' && strtotime($TAHUN.'-'.$bln_tgh) < strtotime(substr($d->END_DATE, 0,7)) && strtotime(substr($d->START_DATE, 0,7)) == strtotime($TAHUN.'-'.$bln_tgh) ) {
+
+					log_data('kondisi 6');
+
+					$type='cut_off';
+					$start_tgl = $d->START_DATE;
+					$end_tgl = akhir_tgl($TAHUN,$bln_tgh);
+
+					//jika jumlah hari lbih dari 28 maka full
+					// jika di bawah 28 hari maka cut off
+
+					if (durasi_tgl($start_tgl,$end_tgl) > 28) {
+						$type = 'full';
+					} 
+
+
+					$total_power_usage = $this->db->query("SELECT sum(POWER_USAGE) as total FROM smartans_daily_power_usage where LOCATION_ID='$value->LOCATION_ID' AND ROOM_ID='$value->ROOM_ID' AND USAGE_DATE BETWEEN '$start_tgl' AND '$end_tgl' ")->row()->total;
+					$total_water_usage = $this->db->query("SELECT sum(WATER_USAGE) AS total FROM SMARTANS_WATER_METER_V where location_id='$value->LOCATION_ID' AND room_id='$value->ROOM_ID' AND MDATE BETWEEN '$start_tgl' AND '$end_tgl' ")->row()->total;
+				} elseif ( strtotime($TAHUN.'-'.$bln_tgh) > strtotime(substr($d->END_DATE, 0,7) )) {
+					log_data('kondisi 7');
+					$this->session->set_flashdata('message', alert_biasa('Tagihan gagal di buat, ROOM '.$value->ROOM_ID.' END DATE < bulan yang dipilih  !','info'));
+					redirect('app/send_inv','refresh');
 				}
 
+				log_data($value->ROOM_ID);
+				log_data($type);
+				log_data($start_tgl);
+				log_data($end_tgl);
+
+				echo "<hr>";
+
+				// exit();
+
+				$this->db->where('LOCATION_ID', $value->LOCATION_ID);
+				$this->db->where('ROOM_NO', $value->ROOM_ID);
+				$this->db->where('ID_TARIF', $id_tarif);
+				$tarif_s = $this->db->get('smartans_tarif');
+				if ($tarif_s->num_rows() == 0) {
+					$this->session->set_flashdata('message', alert_biasa('Tagihan gagal di buat, tarif di ROOM '.$value->ROOM_ID.' belum di set!','info'));
+					redirect('app/send_inv','refresh');
+					exit;
+				}
+				$tarif_room = $tarif_s->row()->TARIF_ROOM;
+
+
+				$this->db->where('LOCATION_ID', $value->LOCATION_ID);
+				$this->db->where('ROOM_NO', $value->ROOM_ID);
+				$this->db->order_by('END_DATE', 'desc');
+				$tarif_listrik = $this->db->get('smartans_tarif')->row()->TARIF_LISTRIK;
+				$this->db->where('LOCATION_ID', $value->LOCATION_ID);
+				$this->db->where('ROOM_NO', $value->ROOM_ID);
+				$this->db->order_by('END_DATE', 'desc');
+				$tarif_air = $this->db->get('smartans_tarif')->row()->TARIF_AIR;
 				
-			} elseif ( $type == 'full' && strtotime($TAHUN.'-'.$bln_tgh) == strtotime(substr($d->END_DATE, 0,7)) && strtotime(substr($d->START_DATE, 0,7)) < strtotime($TAHUN.'-'.$bln_tgh) ) {
+				$total_tagihan = ($total_water_usage*$tarif_air) + ($total_power_usage*$tarif_listrik) + $tarif_room;
 
-				log_data('kondisi 3');
+				$params = ['external_id' => $no_invoice,
+				    'payer_email' => $value->EMAIL,
+				    'description' => 'Pembayaran Kos',
+				    'amount' => $total_tagihan
+				];
+				$url_back = '';
+				$paygate_status = $this->db->get_where('smartans_location', array('LOCATION_ID'=>$LOCATION_ID))->row()->PAYGATE_FLAG;
+		        if ($paygate_status == '0') {
+		          # code...
 
-				$type='cut_off';
-				$start_tgl = substr($d->END_DATE, 0,7).'-01';
+		        }else{
 
-				$total_power_usage = $this->db->query("SELECT sum(POWER_USAGE) as total FROM smartans_daily_power_usage where LOCATION_ID='$value->LOCATION_ID' AND ROOM_ID='$value->ROOM_ID' AND USAGE_DATE BETWEEN '$start_tgl' AND '$d->END_DATE' ")->row()->total;
-				$total_water_usage = $this->db->query("SELECT sum(WATER_USAGE) AS total FROM SMARTANS_WATER_METER_V where location_id='$value->LOCATION_ID' AND room_id='$value->ROOM_ID' AND MDATE BETWEEN '$start_tgl' AND '$d->END_DATE' ")->row()->total;
+					$createInvoice = \Xendit\Invoice::create($params);
+					$id = $createInvoice['id'];
 
-			} elseif ( $type == 'full' && strtotime($TAHUN.'-'.$bln_tgh) < strtotime(substr($d->END_DATE, 0,7)) && strtotime(substr($d->START_DATE, 0,7)) < strtotime($TAHUN.'-'.$bln_tgh) ) {
+					$getInvoice = \Xendit\Invoice::retrieve($id);
+					// log_data($getInvoice);
+					$url_back = $getInvoice['invoice_url'];
+				}
 
-				log_data('kondisi 4');
+				$cek_ = $this->db->get_where('smartans_tagihan_header', array('id_user'=>$value->ID_USER,'bulan'=>$BULAN,'tahun'=>$TAHUN,'type'=>$type, 'tgl1'=>$start_tgl,'tgl2'=>$end_tgl));
+				if ($cek_->num_rows() > 0) {
+					$this->db->where('id_user', $value->ID_USER);
+					$this->db->where('bulan', $BULAN);
+					$this->db->where('tahun', $TAHUN);
+					$this->db->where('type', $type);
+					$this->db->where('tgl1', $start_tgl);
+					$this->db->where('tgl2', $end_tgl);
+					$this->db->delete('smartans_tagihan_header');
+				}
 
-				$total_power_usage = total_power_usage($value->LOCATION_ID,$value->ROOM_ID,$BULAN,$TAHUN);
-				$total_water_usage = total_water_usage($value->LOCATION_ID,$value->ROOM_ID,$BULAN,$TAHUN);
+				//simpan ke data tagihan header
+				$this->db->insert('smartans_tagihan_header', array(
+					'id_user'=> $value->ID_USER,
+					'no_invoice'=> $no_invoice,
+					'date_create'=> get_waktu(),
+					'total_tagihan'=> $total_tagihan,
+					'invoice_url'=> $url_back,
+					'invoice_id_xendit'=> $id,
+					'bulan' => $BULAN,
+					'tahun' => $TAHUN,
+					'type'=>$type,
+					'tgl1'=>$start_tgl,
+					'tgl2'=>$end_tgl,
+				));
 
-			} elseif ( $type == 'full' && substr($d->START_DATE, 0,7) == substr($d->END_DATE, 0,7) ) {
+				$id_tagihan = $this->db->insert_id();
 
-				log_data('kondisi 5');
+				//simpan ke data tagihan detail
+				$this->db->insert('smartans_tagihan_detail', array(
+					'id_tagihan'=> $id_tagihan,
+					'detail_tagihan'=> 'Kamar',
+					'jumlah'=> $tarif_room
+				));
 
-				$type='cut_off';
+				$this->db->insert('smartans_tagihan_detail', array(
+					'id_tagihan'=> $id_tagihan,
+					'detail_tagihan'=> 'Listrik',
+					'jumlah'=>$total_power_usage*$tarif_listrik,
+					'usage' => $total_power_usage
+				));
 
-				$total_power_usage = $this->db->query("SELECT sum(POWER_USAGE) as total FROM smartans_daily_power_usage where LOCATION_ID='$value->LOCATION_ID' AND ROOM_ID='$value->ROOM_ID' AND USAGE_DATE BETWEEN '$start_tgl' AND '$d->END_DATE' ")->row()->total;
-				$total_water_usage = $this->db->query("SELECT sum(WATER_USAGE) AS total FROM SMARTANS_WATER_METER_V where location_id='$value->LOCATION_ID' AND room_id='$value->ROOM_ID' AND MDATE BETWEEN '$start_tgl' AND '$d->END_DATE' ")->row()->total;
+				$this->db->insert('smartans_tagihan_detail', array(
+					'id_tagihan'=> $id_tagihan,
+					'detail_tagihan'=> 'Air',
+					'jumlah'=>$total_water_usage*$tarif_air,
+					'usage' => $total_water_usage
+				));
 
-			} elseif ( $type == 'full' && strtotime($TAHUN.'-'.$bln_tgh) < strtotime(substr($d->END_DATE, 0,7)) && strtotime(substr($d->START_DATE, 0,7)) == strtotime($TAHUN.'-'.$bln_tgh) ) {
+				if ($EMAIL == '1') {
+					$this->kirim_email($no_invoice);
+				}
 
-				log_data('kondisi 6');
-
-				$type='cut_off';
-				$start_tgl = $d->START_DATE;
-				$end_tgl = akhir_tgl($TAHUN,$bln_tgh);
-
-
-				$total_power_usage = $this->db->query("SELECT sum(POWER_USAGE) as total FROM smartans_daily_power_usage where LOCATION_ID='$value->LOCATION_ID' AND ROOM_ID='$value->ROOM_ID' AND USAGE_DATE BETWEEN '$start_tgl' AND '$end_tgl' ")->row()->total;
-				$total_water_usage = $this->db->query("SELECT sum(WATER_USAGE) AS total FROM SMARTANS_WATER_METER_V where location_id='$value->LOCATION_ID' AND room_id='$value->ROOM_ID' AND MDATE BETWEEN '$start_tgl' AND '$end_tgl' ")->row()->total;
-			} elseif ( strtotime($TAHUN.'-'.$bln_tgh) > strtotime(substr($d->END_DATE, 0,7) )) {
-				log_data('kondisi 7');
-				$this->session->set_flashdata('message', alert_biasa('Tagihan gagal di buat, ROOM '.$value->ROOM_ID.' END DATE < bulan yang dipilih  !','info'));
-				redirect('app/send_inv','refresh');
 			}
-
-			log_data($value->ROOM_ID);
-			log_data($type);
-			log_data($start_tgl);
-			log_data($end_tgl);
-
-			echo "<hr>";
-
-			// exit();
-
-			$this->db->where('LOCATION_ID', $value->LOCATION_ID);
-			$this->db->where('ROOM_NO', $value->ROOM_ID);
-			$this->db->where('ID_TARIF', $id_tarif);
-			$tarif_s = $this->db->get('smartans_tarif');
-			if ($tarif_s->num_rows() == 0) {
-				$this->session->set_flashdata('message', alert_biasa('Tagihan gagal di buat, tarif di ROOM '.$value->ROOM_ID.' belum di set!','info'));
-				redirect('app/send_inv','refresh');
-				exit;
-			}
-			$tarif_room = $tarif_s->row()->TARIF_ROOM;
-
-
-			$this->db->where('LOCATION_ID', $value->LOCATION_ID);
-			$this->db->where('ROOM_NO', $value->ROOM_ID);
-			$this->db->order_by('END_DATE', 'desc');
-			$tarif_listrik = $this->db->get('smartans_tarif')->row()->TARIF_LISTRIK;
-			$this->db->where('LOCATION_ID', $value->LOCATION_ID);
-			$this->db->where('ROOM_NO', $value->ROOM_ID);
-			$this->db->order_by('END_DATE', 'desc');
-			$tarif_air = $this->db->get('smartans_tarif')->row()->TARIF_AIR;
 			
-			$total_tagihan = ($total_water_usage*$tarif_air) + ($total_power_usage*$tarif_listrik) + $tarif_room;
-
-			$params = ['external_id' => $no_invoice,
-			    'payer_email' => $value->EMAIL,
-			    'description' => 'Pembayaran Kos',
-			    'amount' => $total_tagihan
-			];
-			$url_back = '';
-			$paygate_status = $this->db->get_where('smartans_location', array('LOCATION_ID'=>$LOCATION_ID))->row()->PAYGATE_FLAG;
-	        if ($paygate_status == '0') {
-	          # code...
-
-	        }else{
-
-				$createInvoice = \Xendit\Invoice::create($params);
-				$id = $createInvoice['id'];
-
-				$getInvoice = \Xendit\Invoice::retrieve($id);
-				// log_data($getInvoice);
-				$url_back = $getInvoice['invoice_url'];
-			}
-
-			$cek_ = $this->db->get_where('smartans_tagihan_header', array('id_user'=>$value->ID_USER,'bulan'=>$BULAN,'tahun'=>$TAHUN,'type'=>$type, 'tgl1'=>$start_tgl,'tgl2'=>$end_tgl));
-			if ($cek_->num_rows() > 0) {
-				$this->db->where('id_user', $value->ID_USER);
-				$this->db->where('bulan', $BULAN);
-				$this->db->where('tahun', $TAHUN);
-				$this->db->where('type', $type);
-				$this->db->where('tgl1', $start_tgl);
-				$this->db->where('tgl2', $end_tgl);
-				$this->db->delete('smartans_tagihan_header');
-			}
-
-			//simpan ke data tagihan header
-			$this->db->insert('smartans_tagihan_header', array(
-				'id_user'=> $value->ID_USER,
-				'no_invoice'=> $no_invoice,
-				'date_create'=> get_waktu(),
-				'total_tagihan'=> $total_tagihan,
-				'invoice_url'=> $url_back,
-				'invoice_id_xendit'=> $id,
-				'bulan' => $BULAN,
-				'tahun' => $TAHUN,
-				'type'=>$type,
-				'tgl1'=>$start_tgl,
-				'tgl2'=>$end_tgl,
-			));
-
-			$id_tagihan = $this->db->insert_id();
-
-			//simpan ke data tagihan detail
-			$this->db->insert('smartans_tagihan_detail', array(
-				'id_tagihan'=> $id_tagihan,
-				'detail_tagihan'=> 'Kamar',
-				'jumlah'=> $tarif_room
-			));
-
-			$this->db->insert('smartans_tagihan_detail', array(
-				'id_tagihan'=> $id_tagihan,
-				'detail_tagihan'=> 'Listrik',
-				'jumlah'=>$total_power_usage*$tarif_listrik,
-				'usage' => $total_power_usage
-			));
-
-			$this->db->insert('smartans_tagihan_detail', array(
-				'id_tagihan'=> $id_tagihan,
-				'detail_tagihan'=> 'Air',
-				'jumlah'=>$total_water_usage*$tarif_air,
-				'usage' => $total_water_usage
-			));
-
-			if ($EMAIL == '1') {
-				$this->kirim_email($no_invoice);
-			}
 			
 			
 
 		}
-
-		$this->session->set_flashdata('message', alert_biasa('Tagihan Berhasil dibuat !','success'));
-		redirect('app/billing_list','refresh');
+		if ($total_dt == 0) {
+			// $this->session->set_flashdata('message', alert_biasa('tidak ada tarif di bulan '.$bln_tgh.' '.$TAHUN.' !','info'));
+			$this->session->set_flashdata('message', alert_biasa('tidak ada tarif yang bisa di pilih !','info'));
+			redirect('app/billing_list','refresh');
+		} else {
+			$this->session->set_flashdata('message', alert_biasa('Tagihan Berhasil dibuat !','success'));
+			redirect('app/billing_list','refresh');
+		}
+		
 
 		
 
 		}
+
+	public function proses_tagihan()
+	{
+		//data input
+		$LOCATION_ID = $this->input->post('LOCATION_ID');
+		$ROOM_ID = $this->input->post('ROOM_ID');
+		$EMAIL = $this->input->post('email');
+		$BULAN = $this->input->post('bulan');
+		$TAHUN = $this->input->post('tahun');
+
+		$cek_str = strlen($BULAN);
+		if ($cek_str == 1) {
+			$bln_tgh = '0'.$BULAN;
+		}
+
+		$data = $this->db->query("SELECT LOCATION_ID,ROOM_NO FROM smartans_tarif WHERE LOCATION_ID='$LOCATION_ID' GROUP BY ROOM_NO ");
+		foreach ($data->result() as $key => $value) {
+			
+
+
+
+		}
+
+
+	}
+
+
 
 		public function cek_pembayaran()
 	    {
@@ -370,8 +421,16 @@ class Web extends CI_Controller {
 
 	    private function kirim_email($no_invoice)
 	    {
+
 	    	$data_tagihan = $this->db->get_where('smartans_tagihan_header', array('no_invoice'=>$no_invoice))->row();
+
 	    	$email = get_data('smartans_user','id_user',$data_tagihan->id_user,'EMAIL');
+	    	if ($data_tagihan->type == 'cut_off') {
+	    		//di kirim ke user admin
+	    		$email = $email = get_data('smartans_user','id_user',$this->session->userdata('id_user'),'EMAIL');
+	    	}
+
+	    	
 	    	$email_saya = "noreplay@hexindo-tbk.co.id";
 			$pass_saya  = "";
 			//konfigurasi email
