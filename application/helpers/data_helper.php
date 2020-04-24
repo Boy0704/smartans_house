@@ -1,4 +1,9 @@
 <?php 
+
+function akhir_tgl($year, $month) {
+	return date("Y-m-d", strtotime('-1 second', strtotime('+1 month',strtotime($month . '/01/' . $year. ' 00:00:00'))));
+}
+
 function bulan_indo($b)
 {
 	$bulan = array(

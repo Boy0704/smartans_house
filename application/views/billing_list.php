@@ -4,6 +4,7 @@
 		<table class="table table-bordered" id="example1">
 			<thead>
 				<tr>
+					<th>#</th>
 					<th>Trx ID</th>
 					<th>Nama User</th>
 					<th>Location ID</th>
@@ -30,9 +31,12 @@
 				}
 				$this->db->order_by('id_tagihan', 'desc');
 				$data = $this->db->get('smartans_tagihan_header');
+				// log_r($this->db->last_query());
+				$no = 1;
 				foreach ($data->result() as $key => $value) {
 				 ?>
 				<tr>
+					<td><?php echo $no; ?></td>
 					<td><?php echo $value->no_invoice ?></td>
 					<td><?php echo get_data('smartans_user','ID_USER',$value->id_user,'FIRST_NAME').' '.get_data('smartans_user','ID_USER',$value->id_user,'LAST_NAME') ?></td>
 					<td><?php echo get_data('smartans_user','ID_USER',$value->id_user,'LOCATION_ID') ?></td>
@@ -68,7 +72,7 @@
 						} ?>
 					</td>
 				</tr>
-			<?php } ?>
+			<?php $no++; } ?>
 			</tbody>
 		</table>
 		</div>
