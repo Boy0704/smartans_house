@@ -15,7 +15,7 @@ class Web extends CI_Controller {
 	public function tes()
 	{
 
-		// $tgl = '2020-05';
+		// $tgl = '2020-04';
 		// foreach ($this->db->get_where('smartans_tarif',array('LOCATION_ID'=>'VERDANT','ROOM_NO'=>'R12'))->result() as $rw) {
 
 		// 	// jk bulan bulan yg di input == bulan berjalan
@@ -24,22 +24,27 @@ class Web extends CI_Controller {
 		// 	// jika bulan bulan yg di input == bulan lalu
 		// 	// dan jika ada 3 macam maka ambil yg terakhir dari bulan tersebut
 		// 	if (strtotime($tgl) == strtotime(date('Y-m'))) {
-		// 		log_data('kondisi 1');
-		// 		if ( strtotime($rw->START_DATE) < strtotime(date('Y-m-d')) && strtotime($rw->END_DATE) > strtotime(date('Y-m-d'))  ) {
-		// 			echo $rw->ID_TARIF;
+		// 		// log_data('kondisi 1');
+		// 		// log_data($rw->START_DATE);
+		// 		// log_data(strtotime($rw->START_DATE));
+		// 		// log_data(date('Y-m-d'));
+		// 		// log_data(strtotime(date('Y-m-d')));
+		// 		if ( strtotime($rw->START_DATE) <= strtotime(date('Y-m-d')) && strtotime($rw->END_DATE) > strtotime(date('Y-m-d'))  ) {
+		// 			log_data($rw->ID_TARIF);
 		// 		} else {
-		// 			echo '0';
+		// 			log_data('0');
 		// 		}
+		// 		// exit();
 		// 	} elseif (strtotime($tgl) < strtotime(date('Y-m'))) {
-		// 		log_data('kondisi 1');
+		// 		log_data('kondisi 2');
 		// 		$tgl_akhir = akhir_tgl(substr($tgl, 0,4), substr($tgl, 5,7));
 		// 		if ( strtotime($rw->START_DATE) < strtotime($tgl_akhir) && strtotime($rw->END_DATE) > strtotime($tgl_akhir)  ) {
-		// 			echo $rw->ID_TARIF;
+		// 			log_data($rw->ID_TARIF);
 		// 		} else {
-		// 			echo '0';
+		// 			log_data('0');
 		// 		}
 		// 	} else {
-		// 		echo '0';
+		// 		log_data('gagal');
 		// 	}
 
 			
@@ -47,7 +52,7 @@ class Web extends CI_Controller {
 
 		// exit();
 
-		log_r(cek_tarif('2020-02','VERDANT','R11'));
+		log_r(cek_tarif('2020-04','VERDANT','R11'));
 		echo date("Y-m-d", strtotime('-1 second', strtotime('+1 month',strtotime('02' . '/01/' . '2020'. ' 00:00:00'))));
 		exit();
 
@@ -126,6 +131,12 @@ class Web extends CI_Controller {
 			$id_tarif = cek_tarif($TAHUN.'-'.$bln_tgh,$value->LOCATION_ID,$value->ROOM_ID);
 			if ($id_tarif == 'gagal') {
 				$this->session->set_flashdata('message', alert_biasa('Tagihan gagal di buat, bulan yg di pilih di atas bulan berjalan!','info'));
+				redirect('app/send_inv','refresh');
+				exit;
+			}
+
+			if ($id_tarif == '') {
+				$this->session->set_flashdata('message', alert_biasa('Tagihan gagal di buat, tarif tidak di temukan di ROOM '.$value->ROOM_ID.' di bulan '.$bln_tgh.' '.$TAHUN.'!','info'));
 				redirect('app/send_inv','refresh');
 				exit;
 			}

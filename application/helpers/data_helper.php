@@ -14,17 +14,13 @@ function cek_tarif($tgl,$location,$room)
 		// jika bulan bulan yg di input == bulan lalu
 		// dan jika ada 3 macam maka ambil yg terakhir dari bulan tersebut
 		if (strtotime($tgl) == strtotime(date('Y-m'))) {
-			if ( strtotime($rw->START_DATE) < strtotime(date('Y-m-d')) && strtotime($rw->END_DATE) > strtotime(date('Y-m-d'))  ) {
+			if ( ( strtotime($rw->START_DATE) < strtotime(date('Y-m-d')) or strtotime($rw->START_DATE) == strtotime(date('Y-m-d')) ) && strtotime($rw->END_DATE) > strtotime(date('Y-m-d'))  ) {
 				return $rw->ID_TARIF;
-			} else {
-				return '0';
 			}
 		} elseif (strtotime($tgl) < strtotime(date('Y-m'))) {
 			$tgl_akhir = akhir_tgl(substr($tgl, 0,4), substr($tgl, 5,7));
 			if ( strtotime($rw->START_DATE) < strtotime($tgl_akhir) && strtotime($rw->END_DATE) > strtotime($tgl_akhir)  ) {
 				return $rw->ID_TARIF;
-			} else {
-				return '0';
 			}
 		} else {
 			// tgl yg di pilih > dari tanggal berjalan
