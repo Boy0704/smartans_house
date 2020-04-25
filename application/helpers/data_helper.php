@@ -28,7 +28,7 @@ function cek_tarif($tgl,$location,$room)
 			}
 		} elseif (strtotime($tgl) < strtotime(date('Y-m'))) {
 			$tgl_akhir = akhir_tgl(substr($tgl, 0,4), substr($tgl, 5,7));
-			if ( strtotime($rw->START_DATE) < strtotime($tgl_akhir) && strtotime($rw->END_DATE) > strtotime($tgl_akhir)  ) {
+			if ( strtotime($rw->START_DATE) < strtotime($tgl_akhir) && strtotime($rw->END_DATE) >= strtotime($tgl_akhir)  ) {
 				return $rw->ID_TARIF;
 			}
 		} else {
