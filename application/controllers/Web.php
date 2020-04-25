@@ -346,7 +346,10 @@ class Web extends CI_Controller {
 						'bulan'=>$BULAN,
 						'tahun'=>$TAHUN,
 						'lokasi'=>$value->LOCATION_ID,
-						'room'=>$value->ROOM_ID
+						'room'=>$value->ROOM_ID,
+						'type'=>$type,
+						'tgl1'=>$start_tgl,
+						'tgl2'=>$end_tgl,
 					));
 					if ($cek_->num_rows() > 0) {
 						// $this->db->where('id_user', $value->ID_USER);
