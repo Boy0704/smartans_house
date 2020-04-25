@@ -51,6 +51,7 @@
             if ($this->session->userdata('level') == 'admin') {
                 $this->db->where_in('LOCATION_ID', $this->session->userdata('location_id'));
             }
+            $this->db->order_by('ID_TARIF', 'desc');
             $smartans_tarif_data = $this->db->get('smartans_tarif');
             foreach ($smartans_tarif_data->result() as $smartans_tarif)
             {
