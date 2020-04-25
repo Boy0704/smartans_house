@@ -482,28 +482,34 @@ class Web extends CI_Controller {
 	    	}
 
 	    	
-	    	$email_saya = "noreplay@hexindo-tbk.co.id";
-			$pass_saya  = "";
+	    	$email_saya = "admin@smartanhouse.com";
+		    $pass_saya  = "smartans2020";
 			//konfigurasi email
-			$config = array();
-			$config['charset'] = 'iso-8859-1';
-			// $config['useragent'] = '10.87.200.12';
-			$config['protocol']= "smtp";
-			$config['mailtype']= "html";
-			$config['smtp_host']= "10.87.200.12";
-			$config['smtp_port']= "25";
-			$config['smtp_timeout']= "25";
-			$config['smtp_user']= "$email_saya";
-			$config['smtp_pass']= "$pass_saya";
-			// $config['crlf']="\r\n";
-			// $config['newline']="\r\n";
-			// $config['wordwrap'] = TRUE;
+    		$config = array();
+    		$config['charset'] = 'utf-8';
+    		$config['useragent'] = 'smartanhouse.com';
+    		$config['protocol']= "smtp";
+    		$config['mailtype']= "html";
+    		$config['smtp_host']= "ssl://mail.smartanhouse.com";
+    		$config['smtp_port']= "465";
+    		$config['smtp_timeout']= "465";
+    		$config['smtp_user']= "$email_saya";
+    		$config['smtp_pass']= "$pass_saya";
+    		$config['crlf']="\r\n";
+    		$config['newline']="\r\n";
+    
+    		$config['wordwrap'] = TRUE;
 
 	        // Load library email dan konfigurasinya
 	        $this->load->library('email', $config);
 
 	        // Email dan nama pengirim
-	        $this->email->from('noreplay@hexindo-tbk.co.id', 'AR Reminder - Invoice No. '.$invoice.'');
+	        $data = array(
+    			'inv' => $no_invoice
+    		);
+	        $messageEmail = $this->load->view('template_mail',$data,TRUE);
+	        $this->email->set_header('Content-Type', 'text/html');
+	        $this->email->from('admin@smartanhouse.com', 'Smartans House');
 
 	        // Email penerima
 	        $this->email->to($email); // Ganti dengan email tujuan
@@ -514,10 +520,10 @@ class Web extends CI_Controller {
 	        // $this->email->attach(base_url().'upload/'.$value->file3);
 
 	        // Subject email
-	        $this->email->subject('AR Reminder - Invoice No. '.$invoice.'');
+	        $this->email->subject('Tagihan - Invoice No. '.$no_invoice.'');
 
 	        // Isi email
-	        $messageEmail = $this->load->view('template_mail');
+	        
 	        $this->email->message($messageEmail);
 
 	        // Tampilkan pesan sukses atau error
