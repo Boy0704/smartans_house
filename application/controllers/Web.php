@@ -345,7 +345,7 @@ class Web extends CI_Controller {
 					$cek_ = $this->db->get_where('smartans_tagihan_header', array(
 						'bulan'=>$BULAN,
 						'tahun'=>$TAHUN,
-						'lokasi'=>$value->LOCATION_ID
+						'lokasi'=>$value->LOCATION_ID,
 						'room'=>$value->ROOM_ID
 					));
 					if ($cek_->num_rows() > 0) {
