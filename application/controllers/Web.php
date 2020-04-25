@@ -111,6 +111,7 @@ class Web extends CI_Controller {
 
 		foreach ($a->result() as $key => $value) {
 			$type = 'full';
+			$send_email = '';
 			// if ($ROOM_ID != '0') {
 			// 	if (intval($bln_now) == $BULAN && $thn_now == $TAHUN) {
 			// 		$type ='cut_off';
@@ -156,7 +157,7 @@ class Web extends CI_Controller {
 				
 
 				if ($type == 'cut_off' && substr($d->START_DATE, 0,7) == substr($d->END_DATE, 0,7)) {
-					log_data('kondisi 1');
+					//log_data('kondisi 1');
 					
 					$total_power_usage = $this->db->query("SELECT sum(POWER_USAGE) as total FROM smartans_daily_power_usage where LOCATION_ID='$value->LOCATION_ID' AND ROOM_ID='$value->ROOM_ID' AND USAGE_DATE BETWEEN '$start_tgl' AND '$d->END_DATE' ")->row()->total;
 					$total_water_usage = $this->db->query("SELECT sum(WATER_USAGE) AS total FROM SMARTANS_WATER_METER_V where location_id='$value->LOCATION_ID' AND room_id='$value->ROOM_ID' AND MDATE BETWEEN '$start_tgl' AND '$d->END_DATE' ")->row()->total;
@@ -164,7 +165,7 @@ class Web extends CI_Controller {
 				}elseif ($type == 'cut_off' && substr($d->START_DATE, 0,7) != substr($d->END_DATE, 0,7)) {
 
 
-					log_data('kondisi 2');
+					//log_data('kondisi 2');
 
 					if ( strtotime(substr($d->START_DATE, 0,7)) < strtotime($TAHUN.'-'.$bln_tgh) && strtotime($TAHUN.'-'.$bln_tgh) < strtotime(substr($d->END_DATE, 0,7))  ) {
 
@@ -194,7 +195,7 @@ class Web extends CI_Controller {
 					
 				} elseif ( $type == 'full' && strtotime($TAHUN.'-'.$bln_tgh) == strtotime(substr($d->END_DATE, 0,7)) && strtotime(substr($d->START_DATE, 0,7)) < strtotime($TAHUN.'-'.$bln_tgh) ) {
 
-					log_data('kondisi 3');
+					//log_data('kondisi 3');
 
 					$type='cut_off';
 					$start_tgl = substr($d->END_DATE, 0,7).'-01';
@@ -204,14 +205,14 @@ class Web extends CI_Controller {
 
 				} elseif ( $type == 'full' && strtotime($TAHUN.'-'.$bln_tgh) < strtotime(substr($d->END_DATE, 0,7)) && strtotime(substr($d->START_DATE, 0,7)) < strtotime($TAHUN.'-'.$bln_tgh) ) {
 
-					log_data('kondisi 4');
+					//log_data('kondisi 4');
 
 					$total_power_usage = total_power_usage($value->LOCATION_ID,$value->ROOM_ID,$BULAN,$TAHUN);
 					$total_water_usage = total_water_usage($value->LOCATION_ID,$value->ROOM_ID,$BULAN,$TAHUN);
 
 				} elseif ( $type == 'full' && substr($d->START_DATE, 0,7) == substr($d->END_DATE, 0,7) ) {
 
-					log_data('kondisi 5');
+					//log_data('kondisi 5');
 
 					$type='cut_off';
 
@@ -220,7 +221,7 @@ class Web extends CI_Controller {
 
 				} elseif ( $type == 'full' && strtotime($TAHUN.'-'.$bln_tgh) < strtotime(substr($d->END_DATE, 0,7)) && strtotime(substr($d->START_DATE, 0,7)) == strtotime($TAHUN.'-'.$bln_tgh) ) {
 
-					log_data('kondisi 6');
+					//log_data('kondisi 6');
 
 					$type='cut_off';
 					$start_tgl = $d->START_DATE;
@@ -237,17 +238,28 @@ class Web extends CI_Controller {
 					$total_power_usage = $this->db->query("SELECT sum(POWER_USAGE) as total FROM smartans_daily_power_usage where LOCATION_ID='$value->LOCATION_ID' AND ROOM_ID='$value->ROOM_ID' AND USAGE_DATE BETWEEN '$start_tgl' AND '$end_tgl' ")->row()->total;
 					$total_water_usage = $this->db->query("SELECT sum(WATER_USAGE) AS total FROM SMARTANS_WATER_METER_V where location_id='$value->LOCATION_ID' AND room_id='$value->ROOM_ID' AND MDATE BETWEEN '$start_tgl' AND '$end_tgl' ")->row()->total;
 				} elseif ( strtotime($TAHUN.'-'.$bln_tgh) > strtotime(substr($d->END_DATE, 0,7) )) {
-					log_data('kondisi 7');
+					//log_data('kondisi 7');
 					$this->session->set_flashdata('message', alert_biasa('Tagihan gagal di buat, ROOM '.$value->ROOM_ID.' END DATE < bulan yang dipilih  !','info'));
 					redirect('app/send_inv','refresh');
 				}
 
-				log_data($value->ROOM_ID);
-				log_data($type);
-				log_data($start_tgl);
-				log_data($end_tgl);
+				if (strtotime($TAHUN.'-'.$bln_tgh) == strtotime(substr($d->END_DATE, 0,7))) {
+					$send_email = 'admin';
+				} else {
+					$send_email = 'user';
+				}
 
-				echo "<hr>";
+				// log_data($value->ROOM_ID);
+				// log_data($type);
+				// log_data($TAHUN.'-'.$bln_tgh);
+				// log_data(substr($d->END_DATE, 0,7));
+				// log_data($send_email);
+				// log_data($start_tgl);
+				// log_data($end_tgl);
+
+				// echo "<hr>";
+
+				
 
 				// exit();
 
@@ -344,7 +356,7 @@ class Web extends CI_Controller {
 				));
 
 				if ($EMAIL == '1') {
-					$this->kirim_email($no_invoice);
+					$this->kirim_email($no_invoice,$send_email);
 				}
 
 			}
@@ -353,6 +365,7 @@ class Web extends CI_Controller {
 			
 
 		}
+		// exit();
 		if ($total_dt == 0) {
 			// $this->session->set_flashdata('message', alert_biasa('tidak ada tarif di bulan '.$bln_tgh.' '.$TAHUN.' !','info'));
 			$this->session->set_flashdata('message', alert_biasa('tidak ada tarif yang bisa di pilih !','info'));
@@ -365,7 +378,7 @@ class Web extends CI_Controller {
 
 		
 
-		}
+	}
 
 	public function proses_tagihan()
 	{
@@ -419,15 +432,15 @@ class Web extends CI_Controller {
 	    }
 
 
-	    private function kirim_email($no_invoice)
+	    private function kirim_email($no_invoice,$status_send)
 	    {
 
 	    	$data_tagihan = $this->db->get_where('smartans_tagihan_header', array('no_invoice'=>$no_invoice))->row();
 
 	    	$email = get_data('smartans_user','id_user',$data_tagihan->id_user,'EMAIL');
-	    	if ($data_tagihan->type == 'cut_off') {
+	    	if ($status_send == 'admin') {
 	    		//di kirim ke user admin
-	    		$email = $email = get_data('smartans_user','id_user',$this->session->userdata('id_user'),'EMAIL');
+	    		$email = get_data('smartans_user','id_user',$this->session->userdata('id_user'),'EMAIL');
 	    	}
 
 	    	
