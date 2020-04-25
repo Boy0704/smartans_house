@@ -342,14 +342,18 @@ class Web extends CI_Controller {
 						$url_back = $getInvoice['invoice_url'];
 					}
 
-					$cek_ = $this->db->get_where('smartans_tagihan_header', array('id_user'=>$value->ID_USER,'bulan'=>$BULAN,'tahun'=>$TAHUN,'type'=>$type, 'tgl1'=>$start_tgl,'tgl2'=>$end_tgl));
+					$cek_ = $this->db->get_where('smartans_tagihan_header', array(
+						'bulan'=>$BULAN,
+						'tahun'=>$TAHUN,
+						'lokasi'=>$value->LOCATION_ID
+						'room'=>$value->ROOM_ID
+					));
 					if ($cek_->num_rows() > 0) {
-						$this->db->where('id_user', $value->ID_USER);
+						// $this->db->where('id_user', $value->ID_USER);
 						$this->db->where('bulan', $BULAN);
 						$this->db->where('tahun', $TAHUN);
-						$this->db->where('type', $type);
-						$this->db->where('tgl1', $start_tgl);
-						$this->db->where('tgl2', $end_tgl);
+						$this->db->where('lokasi', $value->LOCATION_ID);
+						$this->db->where('room', $value->ROOM_ID);
 						$this->db->delete('smartans_tagihan_header');
 					}
 
@@ -366,6 +370,8 @@ class Web extends CI_Controller {
 						'type'=>$type,
 						'tgl1'=>$start_tgl,
 						'tgl2'=>$end_tgl,
+						'lokasi'=>$value->LOCATION_ID,
+						'room'=>$value->ROOM_ID,
 					));
 
 					$id_tagihan = $this->db->insert_id();
