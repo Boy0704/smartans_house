@@ -386,9 +386,13 @@ class Web extends CI_Controller {
 					if ($cek_->num_rows() > 0) {
 						// $this->db->where('id_user', $value->ID_USER);
 						//Sebelum hapus yang lama, expire invoice yg lama
-						foreach ($cek_->result() as $rw) {
-							$expireInvoice = \Xendit\Invoice::expireInvoice($rw->invoice_id_xendit);
+						$is_xendit = get_data('smartans_location','LOCATION_ID',$value->LOCATION_ID,'PAYGATE_FLAG');
+						if ($is_xendit == '1') {
+							foreach ($cek_->result() as $rw) {
+								$expireInvoice = \Xendit\Invoice::expireInvoice($rw->invoice_id_xendit);
+							}
 						}
+						
 
 						$this->db->where('bulan', $BULAN);
 						$this->db->where('tahun', $TAHUN);
