@@ -13,7 +13,7 @@ class Web extends CI_Controller {
 	public function tes()
 	{
 
-		$tgl = '2020-04';
+		$tgl = '2020-05';
 		$location = 'VERDANT';
 		$room = 'R11';
 		foreach ($this->db->get_where('smartans_tarif',array('LOCATION_ID'=>$location,'ROOM_NO'=>$room))->result() as $rw) {
@@ -221,7 +221,7 @@ class Web extends CI_Controller {
 					
 
 					if ($type == 'cut_off' && substr($d->START_DATE, 0,7) == substr($d->END_DATE, 0,7)) {
-						//log_data('kondisi 1');
+						// log_data('kondisi 1');
 						
 						$total_power_usage = $this->db->query("SELECT sum(POWER_USAGE) as total FROM smartans_daily_power_usage where LOCATION_ID='$value->LOCATION_ID' AND ROOM_ID='$value->ROOM_ID' AND USAGE_DATE BETWEEN '$start_tgl' AND '$d->END_DATE' ")->row()->total;
 						$total_water_usage = $this->db->query("SELECT sum(WATER_USAGE) AS total FROM SMARTANS_WATER_METER_V where location_id='$value->LOCATION_ID' AND room_id='$value->ROOM_ID' AND MDATE BETWEEN '$start_tgl' AND '$d->END_DATE' ")->row()->total;
@@ -229,7 +229,7 @@ class Web extends CI_Controller {
 					}elseif ($type == 'cut_off' && substr($d->START_DATE, 0,7) != substr($d->END_DATE, 0,7)) {
 
 
-						//log_data('kondisi 2');
+						// log_data('kondisi 2');
 
 						if ( strtotime(substr($d->START_DATE, 0,7)) < strtotime($TAHUN.'-'.$bln_tgh) && strtotime($TAHUN.'-'.$bln_tgh) < strtotime(substr($d->END_DATE, 0,7))  ) {
 
@@ -259,7 +259,7 @@ class Web extends CI_Controller {
 						
 					} elseif ( $type == 'full' && strtotime($TAHUN.'-'.$bln_tgh) == strtotime(substr($d->END_DATE, 0,7)) && strtotime(substr($d->START_DATE, 0,7)) < strtotime($TAHUN.'-'.$bln_tgh) ) {
 
-						//log_data('kondisi 3');
+						// log_data('kondisi 3');
 
 						$type='cut_off';
 						$start_tgl = substr($d->END_DATE, 0,7).'-01';
@@ -269,14 +269,14 @@ class Web extends CI_Controller {
 
 					} elseif ( $type == 'full' && strtotime($TAHUN.'-'.$bln_tgh) < strtotime(substr($d->END_DATE, 0,7)) && strtotime(substr($d->START_DATE, 0,7)) < strtotime($TAHUN.'-'.$bln_tgh) ) {
 
-						//log_data('kondisi 4');
+						// log_data('kondisi 4');
 
 						$total_power_usage = total_power_usage($value->LOCATION_ID,$value->ROOM_ID,$BULAN,$TAHUN);
 						$total_water_usage = total_water_usage($value->LOCATION_ID,$value->ROOM_ID,$BULAN,$TAHUN);
 
 					} elseif ( $type == 'full' && substr($d->START_DATE, 0,7) == substr($d->END_DATE, 0,7) ) {
 
-						//log_data('kondisi 5');
+						// log_data('kondisi 5');
 
 						$type='cut_off';
 
@@ -285,7 +285,7 @@ class Web extends CI_Controller {
 
 					} elseif ( $type == 'full' && strtotime($TAHUN.'-'.$bln_tgh) < strtotime(substr($d->END_DATE, 0,7)) && strtotime(substr($d->START_DATE, 0,7)) == strtotime($TAHUN.'-'.$bln_tgh) ) {
 
-						//log_data('kondisi 6');
+						// log_data('kondisi 6');
 
 						$type='cut_off';
 						$start_tgl = $d->START_DATE;
@@ -302,7 +302,7 @@ class Web extends CI_Controller {
 						$total_power_usage = $this->db->query("SELECT sum(POWER_USAGE) as total FROM smartans_daily_power_usage where LOCATION_ID='$value->LOCATION_ID' AND ROOM_ID='$value->ROOM_ID' AND USAGE_DATE BETWEEN '$start_tgl' AND '$end_tgl' ")->row()->total;
 						$total_water_usage = $this->db->query("SELECT sum(WATER_USAGE) AS total FROM SMARTANS_WATER_METER_V where location_id='$value->LOCATION_ID' AND room_id='$value->ROOM_ID' AND MDATE BETWEEN '$start_tgl' AND '$end_tgl' ")->row()->total;
 					} elseif ( strtotime($TAHUN.'-'.$bln_tgh) > strtotime(substr($d->END_DATE, 0,7) )) {
-						//log_data('kondisi 7');
+						// log_data('kondisi 7');
 						// $this->session->set_flashdata('message', alert_biasa('Tagihan gagal di buat, ROOM '.$value->ROOM_ID.' END DATE < bulan yang dipilih  !','info'));
 						// redirect('app/send_inv','refresh');
 					}
@@ -314,6 +314,7 @@ class Web extends CI_Controller {
 					}
 
 					// log_data($value->ROOM_ID);
+					// log_data($no_invoice);
 					// log_data($type);
 					// log_data($TAHUN.'-'.$bln_tgh);
 					// log_data(substr($d->END_DATE, 0,7));
@@ -391,6 +392,8 @@ class Web extends CI_Controller {
 
 						$this->db->where('bulan', $BULAN);
 						$this->db->where('tahun', $TAHUN);
+						$this->db->where('tgl1', $start_tgl);
+						$this->db->where('tgl2', $end_tgl);
 						$this->db->where('lokasi', $value->LOCATION_ID);
 						$this->db->where('room', $value->ROOM_ID);
 						$this->db->delete('smartans_tagihan_header');
