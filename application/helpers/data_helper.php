@@ -1,5 +1,22 @@
 <?php 
 
+function expiry_date($tgl1,$tgl2)
+{
+	$tanggal = new DateTime($tgl1); 
+
+	$sekarang = new DateTime($tgl2);
+
+	$perbedaan = $tanggal->diff($sekarang);
+
+	//gabungkan
+	// echo $perbedaan->y.' selisih tahun.';
+	// echo $perbedaan->m.' selisih bulan.';
+	// echo $perbedaan->d.' selisih hari.';
+	// echo $perbedaan->h.' selisih jam.';
+	// echo $perbedaan->i.' selisih menit.';
+	$a = ($perbedaan->d * (3600 * 24)) + ($perbedaan->h * 3600) + ($perbedaan->i * 60);
+	return $a;
+}
 
 function durasi_tgl($tgl1,$tgl2)
 {
