@@ -8,9 +8,7 @@ class Web extends CI_Controller {
 	public function __construct()
 	{
 		parent::__construct();
-		if ($this->session->userdata('level') == '') {
-            redirect('login');
-        }
+		
 	}
 	public function tes()
 	{
@@ -64,11 +62,41 @@ class Web extends CI_Controller {
 		}
 	}
 
+	function cinv()
+	{
+		log_r(expiry_date(get_waktu(),date('Y-m-20 23:59:59')));
+		require APPPATH.'vendor/autoload.php';
+        
+		Xendit::setApiKey('xnd_development_rtmixBGRRVkoWJefkiE63EFhHUp19mdMj5i4ZGmP5YdDAicvvDhD5MPh0SnUW');
+
+		$expried_date = expiry_date(get_waktu(),date('2020-05-20 23:59:59'));
+
+		$params = ['external_id' => 'tesboy_demo_2345',
+		    'payer_email' => 'boykurniawan123@gmail.com',
+		    'description' => 'Trip to Bali',
+		    'amount' => 32000,
+		    'invoice_duration' => $expried_date
+		];
+
+		$createInvoice = \Xendit\Invoice::create($params);
+		log_data($createInvoice);
+
+		$id = $createInvoice['id'];
+
+		$getInvoice = \Xendit\Invoice::retrieve($id);
+		log_data($getInvoice);
+
+	}
+
 	public function create_invoice()
 	{
+	    if ($this->session->userdata('level') == '') {
+            redirect('login');
+        }
 		require APPPATH.'vendor/autoload.php';
-
-		Xendit::setApiKey('xnd_development_rtmixBGRRVkoWJefkiE63EFhHUp19mdMj5i4ZGmP5YdDAicvvDhD5MPh0SnUW');
+        
+        // xnd_development_pPwuNPKARflO1Nm8Uca07o6chbygTvrthmOoTpxSzLAaeURIp0qGmwk71oZ6FG
+		Xendit::setApiKey('xnd_development_pPwuNPKARflO1Nm8Uca07o6chbygTvrthmOoTpxSzLAaeURIp0qGmwk71oZ6FG');
 
 
 		//ambil data user
@@ -322,10 +350,13 @@ class Web extends CI_Controller {
 					
 					$total_tagihan = ($total_water_usage*$tarif_air) + ($total_power_usage*$tarif_listrik) + $tarif_room;
 
+					$due_date = get_data('smartans_location','LOCATION_ID',$value->LOCATION_ID,'DUE_DATE');
+
 					$params = ['external_id' => $no_invoice,
 					    'payer_email' => $value->EMAIL,
 					    'description' => 'Pembayaran Kos',
-					    'amount' => $total_tagihan
+					    'amount' => $total_tagihan,
+					    'invoice_duration'=> expiry_date(get_waktu(),date('Y-m-'.$due_date.' 23:59:59'))
 					];
 					$url_back = '';
 					$paygate_status = $this->db->get_where('smartans_location', array('LOCATION_ID'=>$LOCATION_ID))->row()->PAYGATE_FLAG;
@@ -353,6 +384,11 @@ class Web extends CI_Controller {
 					));
 					if ($cek_->num_rows() > 0) {
 						// $this->db->where('id_user', $value->ID_USER);
+						//Sebelum hapus yang lama, expire invoice yg lama
+						foreach ($cek_->result() as $rw) {
+							$expireInvoice = \Xendit\Invoice::expireInvoice($rw->invoice_id_xendit);
+						}
+
 						$this->db->where('bulan', $BULAN);
 						$this->db->where('tahun', $TAHUN);
 						$this->db->where('lokasi', $value->LOCATION_ID);
