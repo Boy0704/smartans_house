@@ -58,6 +58,12 @@
                 <input type="radio" name="PAYGATE_FLAG" value="0" checked=""> NON AKTIF
             <?php } ?>
         </div>
+
+        <div class="form-group">
+            <label>DUE DATE</label>
+            <input type="text" name="DUE_DATE" class="form-control" value="<?php echo $DUE_DATE ?>" placeholder="Tanggal Jatuh Tempo">
+        </div>
+
 	    <input type="hidden" name="ID" value="<?php echo $ID; ?>" /> 
 	    <button type="submit" class="btn btn-primary"><?php echo $button ?></button> 
 	    <a href="<?php echo site_url('smartans_location') ?>" class="btn btn-default">Cancel</a>

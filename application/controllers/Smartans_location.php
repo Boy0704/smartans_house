@@ -76,7 +76,8 @@ class Smartans_location extends CI_Controller
         'LOCATION_NAME' => set_value('LOCATION_NAME'),
         'LOCATION_ADDRESS' => set_value('LOCATION_ADDRESS'),
         'ACTIVE_FLAG' => set_value('ACTIVE_FLAG'),
-	    'PAYGATE_FLAG' => set_value('PAYGATE_FLAG'),
+        'PAYGATE_FLAG' => set_value('PAYGATE_FLAG'),
+	    'DUE_DATE' => set_value('DUE_DATE'),
 	);
         $this->load->view('v_index', $data);
     }
@@ -93,7 +94,8 @@ class Smartans_location extends CI_Controller
         'LOCATION_NAME' => $this->input->post('LOCATION_NAME',TRUE),
         'LOCATION_ADDRESS' => $this->input->post('LOCATION_ADDRESS',TRUE),
         'ACTIVE_FLAG' => $this->input->post('ACTIVE_FLAG',TRUE),
-		'PAYGATE_FLAG' => $this->input->post('PAYGATE_FLAG',TRUE),
+        'PAYGATE_FLAG' => $this->input->post('PAYGATE_FLAG',TRUE),
+		'DUE_DATE' => $this->input->post('DUE_DATE',TRUE),
 	    );
 
             $this->Smartans_location_model->insert($data);
@@ -117,7 +119,8 @@ class Smartans_location extends CI_Controller
         'LOCATION_NAME' => set_value('LOCATION_NAME', $row->LOCATION_NAME),
         'LOCATION_ADDRESS' => set_value('LOCATION_ADDRESS', $row->LOCATION_ADDRESS),
         'ACTIVE_FLAG' => set_value('ACTIVE_FLAG', $row->ACTIVE_FLAG),
-		'PAYGATE_FLAG' => set_value('PAYGATE_FLAG', $row->PAYGATE_FLAG),
+        'PAYGATE_FLAG' => set_value('PAYGATE_FLAG', $row->PAYGATE_FLAG),
+		'DUE_DATE' => set_value('DUE_DATE', $row->DUE_DATE),
 	    );
             $this->load->view('v_index', $data);
         } else {
@@ -138,7 +141,8 @@ class Smartans_location extends CI_Controller
         'LOCATION_NAME' => $this->input->post('LOCATION_NAME',TRUE),
         'LOCATION_ADDRESS' => $this->input->post('LOCATION_ADDRESS',TRUE),
         'ACTIVE_FLAG' => $this->input->post('ACTIVE_FLAG',TRUE),
-		'PAYGATE_FLAG' => $this->input->post('PAYGATE_FLAG',TRUE),
+        'PAYGATE_FLAG' => $this->input->post('PAYGATE_FLAG',TRUE),
+		'DUE_DATE' => $this->input->post('DUE_DATE',TRUE),
 	    );
 
             $this->Smartans_location_model->update($this->input->post('ID', TRUE), $data);
