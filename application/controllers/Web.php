@@ -10,6 +10,7 @@ class Web extends CI_Controller {
 		parent::__construct();
 		
 	}
+
 	public function tes()
 	{
 
@@ -94,6 +95,8 @@ class Web extends CI_Controller {
             redirect('login');
         }
 		require APPPATH.'vendor/autoload.php';
+
+
         
         // xnd_development_pPwuNPKARflO1Nm8Uca07o6chbygTvrthmOoTpxSzLAaeURIp0qGmwk71oZ6FG
 		Xendit::setApiKey('xnd_development_pPwuNPKARflO1Nm8Uca07o6chbygTvrthmOoTpxSzLAaeURIp0qGmwk71oZ6FG');
@@ -105,6 +108,17 @@ class Web extends CI_Controller {
 		$EMAIL = $this->input->post('email');
 		$BULAN = $this->input->post('bulan');
 		$TAHUN = $this->input->post('tahun');
+
+		// apakah lbih dari 2 bulan lalu
+		$bulanlalu =  dua_bulan_lalu(date('Y-m-d'));
+		if (strtotime(substr($bulanlalu, 0,7)) <= strtotime($TAHUN.'-'.$BULAN)) {
+			// boleh;
+		} else {
+			//tidak boleh
+			$this->session->set_flashdata('message', alert_biasa('Silahkan Pilih 2 Bulan mundur !','info'));
+			redirect('app/send_inv','refresh');
+			exit;
+		}
 		
 		
 		$this->db->where('LEVEL', 'user');
@@ -149,7 +163,7 @@ class Web extends CI_Controller {
 				$bln_tgh = $BULAN;
 			}
 
-			$no_invoice = create_random(8);
+			
 
 			$total_power_usage = total_power_usage($value->LOCATION_ID,$value->ROOM_ID,$BULAN,$TAHUN);
 			$total_water_usage = total_water_usage($value->LOCATION_ID,$value->ROOM_ID,$BULAN,$TAHUN);
@@ -402,6 +416,8 @@ class Web extends CI_Controller {
 						$this->db->where('room', $value->ROOM_ID);
 						$this->db->delete('smartans_tagihan_header');
 					}
+
+					$no_invoice = create_random(8);
 
 					//simpan ke data tagihan header
 					$this->db->insert('smartans_tagihan_header', array(

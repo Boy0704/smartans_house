@@ -1,5 +1,11 @@
 <?php 
 
+function dua_bulan_lalu($tgl1)
+{
+	$hasil = date('Y-m-d', strtotime('-2 month', strtotime( $tgl1 )));
+	return $hasil;
+}
+
 function expiry_date($tgl1,$tgl2)
 {
 	$tanggal = new DateTime($tgl1); 
