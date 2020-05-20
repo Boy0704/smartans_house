@@ -410,6 +410,15 @@ class Web extends CI_Controller {
 								$cek_Invoice = \Xendit\Invoice::retrieve($rw->invoice_id_xendit);
 							    if($cek_Invoice != NULL) {
 							        $expireInvoice = \Xendit\Invoice::expireInvoice($rw->invoice_id_xendit);
+
+							        $this->db->where('bulan', $BULAN);
+									$this->db->where('tahun', $TAHUN);
+									$this->db->where('tgl1', $start_tgl);
+									$this->db->where('tgl2', $end_tgl);
+									$this->db->where('lokasi', $value->LOCATION_ID);
+									$this->db->where('room', $value->ROOM_ID);
+									$this->db->delete('smartans_tagihan_header');
+
 							    } else {
 							        
 							    }
