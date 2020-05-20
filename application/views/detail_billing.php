@@ -3,10 +3,25 @@
 $inv = $this->uri->segment(3);
 $data = $this->db->get_where('smartans_tagihan_header', array('no_invoice'=>$inv))->row();
 
+$day = get_data('smartans_location','LOCATION_ID',$data->lokasi,'due_date');
+$due_date = date_indo(date('Y-m-'.$day));
+
  ?>
 <div class="row">
 	<div class="col-md-12">
 		<table class="table table-havored">
+			<tr>
+				<td>Invoice Date</td>
+				<td>
+					<b><?php echo date_indo(substr($data->date_create, 0,10)) ?></b>
+				</td>
+			</tr>
+			<tr>
+				<td>Due Date</td>
+				<td>
+					<b><?php echo $due_date ?></b>
+				</td>
+			</tr>
 			<tr>
 				<td>Nama</td>
 				<td>
@@ -98,6 +113,19 @@ $data = $this->db->get_where('smartans_tagihan_header', array('no_invoice'=>$inv
 					$tot = $room + $total;
 					echo number_format($tot,2)
 					 ?>
+				</td>
+			</tr>
+			<tr>
+				<td>Paygate Status</td>
+				<td>
+					<?php
+					$paygate_status = $this->db->get_where('smartans_location', array('LOCATION_ID'=>get_data('smartans_user','id_user',$data->id_user,'LOCATION_ID')))->row()->PAYGATE_FLAG;
+					 if ($paygate_status == '0') { ?>
+					 	<span class="label label-info">No</span>
+					 <?php } else { ?>
+					 	<span class="label label-success">Yes</span> 
+					 	<a href="<?php echo $data->invoice_url ?>" target="_blank" class="label label-primary">Lihat Invoice</a>
+					 <?php } ?>
 				</td>
 			</tr>
 		</table>
