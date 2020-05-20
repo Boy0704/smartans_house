@@ -327,6 +327,8 @@ class Web extends CI_Controller {
 						$send_email = 'user';
 					}
 
+					$no_invoice = create_random(8);
+
 					// log_data($value->ROOM_ID);
 					// log_data($no_invoice);
 					// log_data($type);
@@ -352,6 +354,8 @@ class Web extends CI_Controller {
 						exit;
 					}
 					$tarif_room = $tarif_s->row()->TARIF_ROOM;
+
+
 
 
 					$this->db->where('LOCATION_ID', $value->LOCATION_ID);
