@@ -407,7 +407,12 @@ class Web extends CI_Controller {
 						$is_xendit = get_data('smartans_location','LOCATION_ID',$value->LOCATION_ID,'PAYGATE_FLAG');
 						if ($is_xendit == '1') {
 							foreach ($cek_->result() as $rw) {
-								$expireInvoice = \Xendit\Invoice::expireInvoice($rw->invoice_id_xendit);
+								$cek_Invoice = \Xendit\Invoice::retrieve($rw->invoice_id_xendit);
+							    if($cek_Invoice != NULL) {
+							        $expireInvoice = \Xendit\Invoice::expireInvoice($rw->invoice_id_xendit);
+							    } else {
+							        
+							    }
 							}
 						}
 						
@@ -606,6 +611,14 @@ class Web extends CI_Controller {
 	            echo 'Error! email tidak dapat dikirim.<br>';
 	            echo $this->email->print_debugger();
 	        }
+	    }
+
+	    public function tes_email($no_invoice)
+	    {
+	    	 $data = array(
+    			'inv' => $no_invoice
+    		);
+	        $this->load->view('template_mail',$data);
 	    }
 		
 		
