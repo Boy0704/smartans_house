@@ -426,7 +426,6 @@ class Web extends CI_Controller {
 						$this->db->delete('smartans_tagihan_header');
 					}
 
-					$no_invoice = create_random(8);
 
 					//simpan ke data tagihan header
 					$this->db->insert('smartans_tagihan_header', array(
