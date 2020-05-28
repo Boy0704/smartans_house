@@ -68,7 +68,7 @@ class Web extends CI_Controller {
 		log_r(expiry_date(get_waktu(),date('Y-m-20 23:59:59')));
 		require APPPATH.'vendor/autoload.php';
         
-		Xendit::setApiKey('xnd_development_rtmixBGRRVkoWJefkiE63EFhHUp19mdMj5i4ZGmP5YdDAicvvDhD5MPh0SnUW');
+		Xendit::setApiKey(api_xendit());
 
 		$expried_date = expiry_date(get_waktu(),date('2020-05-20 23:59:59'));
 
@@ -99,7 +99,7 @@ class Web extends CI_Controller {
 
         
         // xnd_development_pPwuNPKARflO1Nm8Uca07o6chbygTvrthmOoTpxSzLAaeURIp0qGmwk71oZ6FG
-		Xendit::setApiKey('xnd_development_pPwuNPKARflO1Nm8Uca07o6chbygTvrthmOoTpxSzLAaeURIp0qGmwk71oZ6FG');
+		Xendit::setApiKey(api_xendit());
 
 
 		//ambil data user
@@ -558,17 +558,17 @@ class Web extends CI_Controller {
 	    	}
 
 	    	
-	    	$email_saya = "admin@smartanhouse.com";
-		    $pass_saya  = "smartans2020";
+	    	$email_saya = set_mail('username');
+		    $pass_saya  = set_mail('password');
 			//konfigurasi email
     		$config = array();
     		$config['charset'] = 'utf-8';
-    		$config['useragent'] = 'smartanhouse.com';
+    		$config['useragent'] = set_mail('useragent');
     		$config['protocol']= "smtp";
     		$config['mailtype']= "html";
-    		$config['smtp_host']= "ssl://mail.smartanhouse.com";
-    		$config['smtp_port']= "465";
-    		$config['smtp_timeout']= "465";
+    		$config['smtp_host']= set_mail('smtp_host');
+    		$config['smtp_port']= set_mail('smtp_port');
+    		$config['smtp_timeout']= set_mail('smtp_timeout');
     		$config['smtp_user']= "$email_saya";
     		$config['smtp_pass']= "$pass_saya";
     		$config['crlf']="\r\n";
