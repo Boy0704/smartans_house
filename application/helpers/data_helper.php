@@ -1,5 +1,20 @@
 <?php 
 
+function set_mail($select)
+{
+	$CI =& get_instance();
+	$CI->db->select($select);
+	$val = $CI->db->get('set_mail')->row_array();
+	return $val[$select];
+}
+
+function api_xendit()
+{
+	$CI =& get_instance();
+	$val = $CI->db->get('api_xendit')->row()->api_key;
+	return $val;
+}
+
 function dua_bulan_lalu($tgl1)
 {
 	$hasil = date('Y-m-d', strtotime('-2 month', strtotime( $tgl1 )));
