@@ -15,7 +15,7 @@ class Eror extends CI_Controller {
 	{
 		$data = array(
 			'konten' => 'page404',
-            'judul_page' => 'Halaman Tidak ditemukan',
+            'judul_page' => 'Maaf Halaman Tidak ditemukan :) !',
 		);
 		$this->load->view('v_index', $data);
 		// echo "tira";
