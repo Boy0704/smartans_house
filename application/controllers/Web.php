@@ -386,12 +386,21 @@ class Web extends CI_Controller {
 
 			        }else{
 
-						$createInvoice = \Xendit\Invoice::create($params);
-						$id = $createInvoice['id'];
+			        	//cek email, jika tidak kirim email,, tidak di kirim ke xendit
+			        	if ($EMAIL == '0') {
+			        		# code...
+			        	} else {
 
-						$getInvoice = \Xendit\Invoice::retrieve($id);
-						// log_data($getInvoice);
-						$url_back = $getInvoice['invoice_url'];
+			        		$createInvoice = \Xendit\Invoice::create($params);
+							$id = $createInvoice['id'];
+
+							$getInvoice = \Xendit\Invoice::retrieve($id);
+							// log_data($getInvoice);
+							$url_back = $getInvoice['invoice_url'];
+
+			        	}
+
+						
 					}
 
 					$cek_ = $this->db->get_where('smartans_tagihan_header', array(
