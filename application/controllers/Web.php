@@ -371,7 +371,7 @@ class Web extends CI_Controller {
 
 					$due_date = get_data('smartans_location','LOCATION_ID',$value->LOCATION_ID,'DUE_DATE');
 
-					$batasExpired = date('Y-m-d', strtotime('+6 month', strtotime(date('Y-m-d'))));
+					$batasExpired = date('Y-m-d', strtotime('+1 month', strtotime(date('Y-m-d'))));
 
 					$params = ['external_id' => $no_invoice,
 					    'payer_email' => $value->EMAIL,
