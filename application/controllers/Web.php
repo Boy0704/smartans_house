@@ -371,11 +371,13 @@ class Web extends CI_Controller {
 
 					$due_date = get_data('smartans_location','LOCATION_ID',$value->LOCATION_ID,'DUE_DATE');
 
+					$batasExpired = date('Y-m-d', strtotime('+6 month', strtotime(date('Y-m-d'))));
+
 					$params = ['external_id' => $no_invoice,
 					    'payer_email' => $value->EMAIL,
 					    'description' => 'Pembayaran Kos',
 					    'amount' => $total_tagihan,
-					    'invoice_duration'=> expiry_date(get_waktu(),date('Y-m-'.$due_date.' 23:59:59'))
+					    'invoice_duration'=> expiry_date(get_waktu(),date($batasExpired.' 23:59:59'))
 					];
 					$url_back = '';
 					$paygate_status = $this->db->get_where('smartans_location', array('LOCATION_ID'=>$LOCATION_ID))->row()->PAYGATE_FLAG;
