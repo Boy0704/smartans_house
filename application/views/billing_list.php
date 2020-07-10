@@ -56,7 +56,7 @@
 						} else {
 
 						 ?>
-						 	<span class="label label-danger">EXPRIED</span>
+						 	<span class="label label-danger">EXPIRED</span>
 						<?php } ?>
 
 					</td>
